@@ -1,0 +1,9 @@
+[Desktop Entry]
+Categories=Game;Qt;
+Exec=qwbfsmanager
+Name=QWBFS Manager
+GenericName=QWBFS Manager
+Comment=QWBFS Manager is a graphical user interface (GUI) for working with WBFS filesystem formatted hard disk drive.
+Terminal=false
+Type=Application
+Icon=qwbfsmanager
