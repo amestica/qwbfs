@@ -38,7 +38,7 @@
 
 #include <QStyledItemDelegate>
 
-class pNetworkAccessManager;
+class DataNetworkCache;
 
 namespace QWBFS {
 namespace Model {
@@ -50,7 +50,7 @@ class DiscDelegate : public QStyledItemDelegate
 	Q_OBJECT
 	
 public:
-	DiscDelegate( QWBFS::Model::DiscModel* parent, pNetworkAccessManager* cache );
+	DiscDelegate( QWBFS::Model::DiscModel* parent, DataNetworkCache* cache );
 	virtual ~DiscDelegate();
 	
 	virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
@@ -58,7 +58,7 @@ public:
 
 protected:
 	QWBFS::Model::DiscModel* mModel;
-	pNetworkAccessManager* mCache;
+	DataNetworkCache* mCache;
 };
 
 }; // Model

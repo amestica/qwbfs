@@ -2,6 +2,72 @@
 <!DOCTYPE TS>
 <TS version="2.0">
 <context>
+    <name>DataNetworkCache</name>
+    <message>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="108"/>
+        <source>Error when downloading the file &apos;%1&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="115"/>
+        <source>Error when creating the cache for file &apos;%1&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="120"/>
+        <source>Error when writing the cache for file &apos;%1&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="258"/>
+        <source>Can&apos;t cache pixmap</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="271"/>
+        <source>The working path &apos;%1&apos; exists and is not a directory.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/datacache/DataNetworkCache.cpp" line="279"/>
+        <source>Can&apos;t create the working path &apos;%1&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ExportThread</name>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="105"/>
+        <source>Cancel requested, the process will stop after the current operation.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="136"/>
+        <source>Exporting &apos;%1&apos;...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="182"/>
+        <source>Can&apos;t open partition &apos;%1&apos;.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="198"/>
+        <source>Importing &apos;%1&apos;...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="242"/>
+        <source>Extracting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ExportThread.cpp" line="244"/>
+        <source>Adding</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Gauge</name>
     <message>
         <location filename="../qwbfs/src/Gauge.cpp" line="135"/>
@@ -73,45 +139,58 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="181"/>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="193"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="180"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="192"/>
         <source>%1 disc(s) on the partition - %2 disc(s) to import.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="229"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="228"/>
         <source>Can&apos;t open partition.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="258"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="257"/>
         <source>The partition &apos;%1&apos; will be formatted,
 all data will be erased permanently, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="270"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="269"/>
         <source>Can&apos;t format partition.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="288"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="287"/>
         <source>You are about to permanently delete %1 disc(s) on partition &apos;%2&apos;, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="311"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="310"/>
         <source>One or more discs have failed to be removed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="324"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="323"/>
         <source>Choose a new name for the disc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PartitionWidget.cpp" line="334"/>
+        <location filename="../qwbfs/src/PartitionWidget.cpp" line="333"/>
         <source>Can&apos;t rename disc id #%1 (%2) to &apos;%3&apos;</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PaypalDonationWidget</name>
+    <message>
+        <location filename="../qwbfs/src/donation/PaypalDonationWidget.cpp" line="183"/>
+        <source>Donation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/donation/PaypalDonationWidget.cpp" line="184"/>
+        <source>Make a donation via Paypal</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -128,17 +207,22 @@ all data will be erased permanently, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ProgressDialog.cpp" line="164"/>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="103"/>
+        <source>Exporting discs...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="125"/>
+        <source>Importing discs...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="162"/>
         <source>Time remaining: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/ProgressDialog.cpp" line="175"/>
-        <source>Cancel requested, the process will stop after the current operation.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/ProgressDialog.cpp" line="185"/>
+        <location filename="../qwbfs/src/ProgressDialog.cpp" line="172"/>
         <source>The thread finished in %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -151,107 +235,118 @@ all data will be erased permanently, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="21"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="24"/>
         <source>General</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="41"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="44"/>
         <source>Application locale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="60"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="63"/>
         <source>Click here to change the application locale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="96"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="99"/>
         <source>Covers&apos; Cache</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="102"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="105"/>
         <source>Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="118"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="121"/>
         <source>Browse for a folder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="157"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="160"/>
         <source>Use the system temporary directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="164"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="167"/>
         <source>Disk Size</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="174"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="177"/>
         <source>Unlimited</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="177"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="180"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="216"/>
         <source> MB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="201"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="203"/>
+        <source>Memory Size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="213"/>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="227"/>
         <source>Proxy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="210"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="236"/>
         <source>Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="220"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="246"/>
         <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="234"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="260"/>
         <source>Password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="264"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="290"/>
         <source>Server</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="278"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="304"/>
         <source>Port</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.ui" line="338"/>
+        <location filename="../qwbfs/src/PropertiesDialog.ui" line="364"/>
         <source>PLEASE NOTE THAT THE PASSWORD IS ENCRYPTED WITH A SHIT METHOD. BE CAREFUL.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="98"/>
+        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="99"/>
         <source>No Proxy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="99"/>
+        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="100"/>
         <source>Socks5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="100"/>
+        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="101"/>
         <source>Http</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="115"/>
+        <location filename="../qwbfs/src/PropertiesDialog.cpp" line="116"/>
         <source>Choose a folder for the data cache</source>
         <translation type="unfinished"></translation>
     </message>
@@ -294,7 +389,7 @@ all data will be erased permanently, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/main.cpp" line="98"/>
+        <location filename="../qwbfs/src/main.cpp" line="95"/>
         <source>The Free, Fast and Powerful cross platform Wii Backup File System manager</source>
         <translation type="unfinished"></translation>
     </message>
@@ -302,97 +397,82 @@ all data will be erased permanently, are you sure?</source>
 <context>
     <name>QWBFS::Driver</name>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="624"/>
-        <source>No error</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="489"/>
+        <source>No error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="626"/>
-        <source>Partition not opened</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="491"/>
+        <source>Partition not opened.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="628"/>
-        <source>Source partition not opened</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="493"/>
+        <source>Source partition not opened.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="630"/>
-        <source>Disc read failed</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="495"/>
+        <source>Disc read failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="632"/>
-        <source>Disc write failed</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="497"/>
+        <source>Disc write failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="634"/>
-        <source>Disc extract failed</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="499"/>
+        <source>Disc extract failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="636"/>
-        <source>Disc add failed</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="501"/>
+        <source>Disc add failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="638"/>
-        <source>Disc convert failed</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="503"/>
+        <source>Disc found.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="640"/>
-        <source>Disc rename failed</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="505"/>
+        <source>Disc not found (or not exists).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="642"/>
-        <source>Disc found</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="507"/>
+        <source>Invalid disc index.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="644"/>
-        <source>Disc not found (or not exists)</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="509"/>
+        <source>Invalid disc id.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="646"/>
-        <source>Invalid disc index</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="511"/>
+        <source>Invalid disc.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="648"/>
-        <source>Invalid disc id</source>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="513"/>
+        <source>Can&apos;t drive to drive copy.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="650"/>
-        <source>Invalid disc</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="652"/>
-        <source>Can&apos;t drive to drive copy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="654"/>
-        <source>Unknown error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="674"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="533"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="676"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="535"/>
         <source>Success</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="678"/>
+        <location filename="../qwbfs/src/qwbfsdriver/Driver.cpp" line="537"/>
         <source>Failed</source>
         <translation type="unfinished"></translation>
     </message>
@@ -446,7 +526,7 @@ all data will be erased permanently, are you sure?</source>
 <context>
     <name>SplashScreen</name>
     <message>
-        <location filename="../qwbfs/src/main.cpp" line="62"/>
+        <location filename="../qwbfs/src/main.cpp" line="60"/>
         <source>Version %1</source>
         <translation type="unfinished"></translation>
     </message>
@@ -469,12 +549,12 @@ all data will be erased permanently, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIAbout.ui" line="257"/>
+        <location filename="../qwbfs/src/UIAbout.ui" line="254"/>
         <source>Notice</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIAbout.ui" line="309"/>
+        <location filename="../qwbfs/src/UIAbout.ui" line="306"/>
         <source>I DO NOT TAKE ANY RESPONSIBILITY FOR ANY DAMAGE TO YOUR WII CONSOLE BECAUSE OF IMPROPER USAGE OF THIS SOFTWARE.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -557,173 +637,166 @@ all data will be erased permanently, are you sure?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="378"/>
-        <source>Convert ISO Files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="387"/>
-        <source>Convert WBFS Files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.ui" line="396"/>
-        <source>Rename Discs in folder</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="226"/>
-        <source>Actions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="180"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="146"/>
         <source>Welcome to %1, the cross-platform WBFS Manager. Report bugs &lt;a href=&quot;%2&quot;&gt;here&lt;/a&gt;, discuss &lt;a href=&quot;%3&quot;&gt;here&lt;/a&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="471"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="409"/>
         <source>I don&apos;t know how to list partition for this platform.
 You will have to set the correct partition path yourself for mounting partitions.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="507"/>
-        <source>Choose ISO files to convert</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="553"/>
-        <source>Choose the folder to scan for ISOs/WBFSs files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="571"/>
-        <source>Choose the pattern to apply:
-%1
-%2
-%3
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="670"/>
-        <source>Which format do you want to use to export the discs ?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="507"/>
-        <source>ISO Files (*.iso)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="530"/>
-        <source>WBFS Files (*.wbfs)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="530"/>
-        <source>Choose WBFS files to convert</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="572"/>
-        <source>%1 = Game Title</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="573"/>
-        <source>%1 = Game Id</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="574"/>
-        <source>%1 = File Suffix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qwbfs/src/UIMain.cpp" line="655"/>
+        <location filename="../qwbfs/src/UIMain.cpp" line="504"/>
         <source>Choose a folder to export the discs</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>WorkerThread</name>
+    <name>pFileListEditor</name>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="93"/>
-        <source>Indirect Export to ISO</source>
+        <location filename="../qwbfs/src/fresh/pFileListEditor.cpp" line="41"/>
+        <source>Choose file(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="93"/>
-        <source>Export to ISO</source>
+        <location filename="../qwbfs/src/fresh/pFileListEditor.cpp" line="60"/>
+        <source>Choose file</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>pPathListEditor</name>
+    <message>
+        <location filename="../qwbfs/src/fresh/pPathListEditor.cpp" line="40"/>
+        <location filename="../qwbfs/src/fresh/pPathListEditor.cpp" line="56"/>
+        <source>Choose directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>pStringListEditor</name>
+    <message>
+        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="131"/>
+        <source>Add Item</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="95"/>
-        <source>Indirect Export to WBFS</source>
+        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="132"/>
+        <source>Remove Item</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="95"/>
-        <source>Export to WBFS</source>
+        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="133"/>
+        <source>Clear Items</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="97"/>
-        <source>Indirect Import to ISO</source>
+        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="134"/>
+        <source>Move Item Up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="97"/>
-        <source>Import to ISO</source>
+        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="135"/>
+        <source>Move Item Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
-        <source>Indirect Import to WBFS</source>
+        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="136"/>
+        <source>Edit Item</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="99"/>
-        <source>Import to WBFS</source>
+        <location filename="../qwbfs/src/fresh/pStringListEditor.cpp" line="150"/>
+        <source>New item</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>pTranslationDialog</name>
+    <message>
+        <location filename="../qwbfs/src/fresh/pTranslationDialog.ui" line="14"/>
+        <source>Choose a translation locale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
-        <source>Indirect Convert to ISO</source>
+        <location filename="../qwbfs/src/fresh/pTranslationDialog.ui" line="24"/>
+        <source>Select the locale you want to use with the application.
+You can click on buttons to locate/reload the translations.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="101"/>
-        <source>Convert to ISO</source>
+        <location filename="../qwbfs/src/fresh/pTranslationDialog.ui" line="48"/>
+        <source>Click here to change the application translations paths</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="103"/>
-        <source>Indirect Convert to WBFS</source>
+        <location filename="../qwbfs/src/fresh/pTranslationDialog.ui" line="59"/>
+        <source>Click here to reload the translations</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="103"/>
-        <source>Convert to WBFS</source>
+        <location filename="../qwbfs/src/fresh/pTranslationDialog.cpp" line="64"/>
+        <source>Translations paths configuration</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>pUpdateChecker</name>
+    <message>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateChecker.cpp" line="137"/>
+        <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="105"/>
-        <source>Rename Disc</source>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateChecker.cpp" line="138"/>
+        <source>Check for update</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>pUpdateCheckerDialog</name>
+    <message>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.ui" line="14"/>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.ui" line="61"/>
+        <source>Update Checker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="359"/>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="580"/>
-        <source>Initializing WBFS disc &apos;%1&apos;...</source>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.ui" line="77"/>
+        <source>When an update is detected, you can directly download it (or update it with your package manager).
+Generally lastest updates fix bugs and/or add new options/plugins/things.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="370"/>
-        <location filename="../qwbfs/src/WorkerThread.cpp" line="595"/>
-        <source>Formating WBFS disc &apos;%1&apos;...</source>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="125"/>
+        <source>Updated on %1 by %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="210"/>
+        <source>You are using version &lt;b&gt;%1&lt;/b&gt; (%2).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="211"/>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="223"/>
+        <source>An error occur: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="255"/>
+        <source>You are running the last available version.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qwbfs/src/UpdateChecker/pUpdateCheckerDialog.cpp" line="266"/>
+        <source>An error occur while parsing xml, retry later.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -38,31 +38,28 @@
 #include "models/DiscModel.h"
 #include "models/DiscDelegate.h"
 #include "wiitdb/Covers.h"
+#include "datacache/DataNetworkCache.h"
 #include "ProgressDialog.h"
 #include "PropertiesDialog.h"
 #include "Properties.h"
 #include "main.h"
+#include "donation/PaypalDonationWidget.h"
+#include "UpdateChecker/pUpdateChecker.h"
 
-#include <Core/pNetworkAccessManager>
-#include <Core/pTranslationManager>
-#include <Gui/pTranslationDialog>
-#include <Gui/pUpdateChecker>
-#include <Gui/pPaypalButton>
+#include <pTranslationManager.h>
+#include <pTranslationDialog.h>
 
-#include <QMenu>
 #include <QFileSystemModel>
 #include <QFileDialog>
 #include <QProcess>
 #include <QMessageBox>
-#include <QInputDialog>
-#include <QPainter>
-#include <QNetworkReply>
+#include <QSpacerItem>
 #include <QDebug>
 
 UIMain::UIMain( QWidget* parent )
 	: QMainWindow( parent )
 {
-	mCache = pNetworkAccessManager::instance();
+	mCache = new DataNetworkCache( this );
 	mUpdateChecker = new pUpdateChecker( this );
 	mUpdateChecker->setDownloadsFeedUrl( QUrl( APPLICATION_DOWNLOADS_FEED ) );
 	mUpdateChecker->setVersion( APPLICATION_VERSION );
@@ -73,34 +70,19 @@ UIMain::UIMain( QWidget* parent )
 	setUnifiedTitleAndToolBarOnMac( true );
 	setupUi( this );
 	
-	QFont font = this->font();
-#ifdef Q_OS_MAC
-	font.setPointSize( font.pointSize() +2 );
-#endif
-	
 	centralVerticalLayout->setMenuBar( qmtbInfos );
-	qmtbInfos->layout()->setMargin( 5 );
-	qmtbInfos->setFont( font );
 	qmtbInfos->setVisible( false );
 	
 	dwTools->toggleViewAction()->setIcon( QIcon( ":/icons/256/tools.png" ) );
 	dwCovers->toggleViewAction()->setIcon( QIcon( ":/icons/256/covers.png" ) );
 	
-	mDonationWidget = new pPaypalButton( this );
+	mDonationWidget = new PaypalDonationWidget( this );
 	mDonationWidget->setBusinessId( "5R924WYXJ6BAW" );
 	mDonationWidget->setItemName( "QWBFS Manager" );
 	mDonationWidget->setItemId( "QWBFS-DONATION" );
 	mDonationWidget->setCurrencyCode( "EUR" );
 	
-	mActions = new QMenu( this );
-	mActions->setIcon( aConvertToWBFSFiles->icon() );
-	mActions->addAction( aConvertToWBFSFiles );
-	mActions->addAction( aConvertToISOFiles );
-	mActions->addAction( aRenameDiscsInFolder );
-	
 	toolBar->insertAction( aAbout, mUpdateChecker->menuAction() );
-	toolBar->addAction( mActions->menuAction() );
-	toolBar->addSeparator();
 	toolBar->addAction( dwTools->toggleViewAction() );
 	toolBar->addAction( dwCovers->toggleViewAction() );
 	QWidget* spacerWidget = new QWidget( toolBar );
@@ -134,14 +116,11 @@ UIMain::UIMain( QWidget* parent )
 	tbReloadDrives->click();
 	aReloadPartitions->trigger();
 	
-	qmtbInfos->installEventFilter( this );
-	
 	localeChanged();
 	
-	connect( mCache, SIGNAL( finished( QNetworkReply* ) ), this, SLOT( networkAccessManager_finished( QNetworkReply* ) ) );
-	connect( mCache, SIGNAL( cached( const QUrl& ) ), this, SLOT( networkAccessManager_cached( const QUrl& ) ) );
-	connect( mCache, SIGNAL( error( const QUrl&, const QString& ) ), this, SLOT( networkAccessManager_error( const QUrl&, const QString& ) ) );
-	connect( mCache, SIGNAL( cacheCleared() ), this, SLOT( networkAccessManager_cacheCleared() ) );
+	connect( mCache, SIGNAL( dataCached( const QUrl& ) ), this, SLOT( dataNetworkCache_dataCached( const QUrl& ) ) );
+	connect( mCache, SIGNAL( error( const QString&, const QUrl& ) ), this, SLOT( dataNetworkCache_error( const QString&, const QUrl& ) ) );
+	connect( mCache, SIGNAL( invalidated() ), this, SLOT( dataNetworkCache_invalidated() ) );
 }
 
 UIMain::~UIMain()
@@ -149,22 +128,9 @@ UIMain::~UIMain()
 	//qWarning() << Q_FUNC_INFO;
 }
 
-pNetworkAccessManager* UIMain::cache() const
+DataNetworkCache* UIMain::cache() const
 {
 	return mCache;
-}
-
-bool UIMain::event( QEvent* event )
-{
-	switch ( event->type() ) {
-		case QEvent::LocaleChange:
-			localeChanged();
-			break;
-		default:
-			break;
-	}
-	
-	return QMainWindow::event( event );
 }
 
 void UIMain::showEvent( QShowEvent* event )
@@ -190,48 +156,31 @@ void UIMain::closeEvent( QCloseEvent* event )
 	QMainWindow::closeEvent( event );
 }
 
-bool UIMain::eventFilter( QObject* object, QEvent* event )
+bool UIMain::event( QEvent* event )
 {
-	if ( object == qmtbInfos ) {
-		if ( event->type() == QEvent::Paint ) {
-			if ( qmtbInfos->queuedMessageWidget()->pendingMessageCount() > 0 ) {
-				QBrush brush;
-				qmtbInfos->queuedMessageWidget()->currentMessageInformations( 0, &brush, 0 );
-				
-				QPainter painter( qmtbInfos );
-				
-				painter.setRenderHint( QPainter::Antialiasing );
-				painter.setPen( QPen( brush.color().darker( 150 ), 0.5 ) );
-				painter.setBrush( brush );
-				painter.drawRoundedRect( qmtbInfos->rect().adjusted( 1, -9, -1, -1 ), 9, 9 );
-				
-				return true;
-			}
-		}
+	switch ( event->type() ) {
+		case QEvent::LocaleChange:
+			localeChanged();
+			break;
+		default:
+			break;
 	}
 	
-	return QMainWindow::eventFilter( object, event );
-}
-
-void UIMain::connectView( PartitionWidget* widget )
-{
-	connect( widget, SIGNAL( openViewRequested() ), this, SLOT( openViewRequested() ) );
-	connect( widget, SIGNAL( closeViewRequested() ), this, SLOT( closeViewRequested() ) );
-	connect( widget, SIGNAL( coverRequested( const QString& ) ), this, SLOT( coverRequested( const QString& ) ) );
+	return QMainWindow::event( event );
 }
 
 void UIMain::localeChanged()
 {
 	retranslateUi( this );
-	mActions->setTitle( tr( "Actions" ) );
 }
 
-void UIMain::loadProperties( bool firstInit )
+void UIMain::loadProperties()
 {
 	Properties properties( this );
 	
-	mCache->setMaximumCacheSize( properties.cacheDiskSize() );
-	mCache->setCacheDirectory( properties.cacheUseTemporaryPath() ? properties.temporaryPath() : properties.cacheWorkingPath() );
+	mCache->setDiskCacheSize( properties.cacheDiskSize() );
+	mCache->setMemoryCacheSize( properties.cacheMemorySize() );
+	mCache->setWorkingPath( properties.cacheUseTemporaryPath() ? properties.temporaryPath() : properties.cacheWorkingPath() );
 	
 	QNetworkProxy proxy( properties.proxyType() );
 	proxy.setHostName( properties.proxyServer() );
@@ -240,6 +189,13 @@ void UIMain::loadProperties( bool firstInit )
 	proxy.setPassword( properties.proxyPassword() );
 	
 	QNetworkProxy::setApplicationProxy( proxy );
+	
+	mDonationWidget->cache()->setDiskCacheSize( mCache->diskCacheSize() );
+	mDonationWidget->cache()->setMemoryCacheSize( mCache->memoryCacheSize() );
+	mDonationWidget->cache()->setWorkingPath( mCache->workingPath() );
+	
+	mUpdateChecker->setLastUpdated( properties.updateLastUpdated() );
+	mUpdateChecker->setLastChecked( properties.updateLastChecked() );
 	
 	pTranslationManager* translationManager = pTranslationManager::instance();
 	translationManager->setTranslationsPaths( properties.translationsPaths() );
@@ -255,43 +211,32 @@ void UIMain::loadProperties( bool firstInit )
 		widget->setLocale( translationManager->currentLocale() );
 	}
 	
-	if ( firstInit ) {
-		mUpdateChecker->setLastUpdated( properties.updateLastUpdated() );
-		mUpdateChecker->setLastChecked( properties.updateLastChecked() );
-		
-		const QModelIndex index = mFoldersModel->index( properties.selectedPath() );
-		
-		properties.restoreState( this );
-		tvFolders->setCurrentIndex( index );
-		tvFolders->scrollTo( index );
-		on_tvFolders_activated( index );
-		pwMainView->setCurrentPartition( properties.selectedPartition() );
-		
-		if ( !properties.selectedPartition().isEmpty() ) {
-			pwMainView->tbLoad->click();
-		}
-	}
+	properties.restoreState( this );
 }
 
 void UIMain::saveProperties()
 {
-	const QModelIndex index = tvFolders->selectionModel()->selectedIndexes().value( 0 );
-	const QString selectedPath = mFoldersModel->filePath( index );
 	Properties properties;
 	
 	properties.setUpdateLastUpdated( mUpdateChecker->lastUpdated() );
 	properties.setUpdateLastChecked( mUpdateChecker->lastChecked() );
-	properties.setSelectedPath( selectedPath );
-	properties.setSelectedPartition( pwMainView->currentPartition() );
 	properties.saveState( this );
+}
+
+void UIMain::connectView( PartitionWidget* widget )
+{
+	connect( widget, SIGNAL( openViewRequested() ), this, SLOT( openViewRequested() ) );
+	connect( widget, SIGNAL( closeViewRequested() ), this, SLOT( closeViewRequested() ) );
+	connect( widget, SIGNAL( coverRequested( const QString& ) ), this, SLOT( coverRequested( const QString& ) ) );
 }
 
 void UIMain::changeLocaleRequested()
 {
 	pTranslationManager* translationManager = pTranslationManager::instance();
-	const QString locale = pTranslationDialog::getLocale( translationManager, this );
+	const QString locale = pTranslationDialog::getLocale( translationManager );
 	
-	if ( !locale.isEmpty() ) {
+	if ( !locale.isEmpty() )
+	{
 		Properties properties;
 		properties.setTranslationsPaths( translationManager->translationsPaths() );
 		properties.setLocaleAccepted( true );
@@ -303,7 +248,7 @@ void UIMain::changeLocaleRequested()
 
 void UIMain::propertiesChanged()
 {
-	loadProperties( false );
+	loadProperties();
 }
 
 void UIMain::openViewRequested()
@@ -332,16 +277,16 @@ void UIMain::coverRequested( const QString& id )
 	lCDCover->clear();
 	lCover->clear();
 	
-	if ( mCache->hasCacheData( urlCD ) || mCache->hasCacheData( urlCDCustom ) || mCache->hasCacheData( urlCover ) ) {
-		networkAccessManager_cached( QUrl( WIITDB_DOMAIN ) );
+	if ( mCache->hasCachedData( urlCD ) || mCache->hasCachedData( urlCDCustom ) || mCache->hasCachedData( urlCover ) ) {
+		dataNetworkCache_dataCached( QUrl() );
 	}
 	
 	if ( !lCDCover->pixmap() ) {
-		mCache->get( QNetworkRequest( urlCD ) );
+		mCache->cacheData( urlCD );
 	}
 	
 	if ( !lCover->pixmap() ) {
-		mCache->get( QNetworkRequest( urlCover ) );
+		mCache->cacheData( urlCover );
 	}
 }
 
@@ -350,16 +295,9 @@ void UIMain::progress_jobFinished( const QWBFS::Model::Disc& disc )
 	mExportModel->updateDisc( disc );
 }
 
-void UIMain::networkAccessManager_finished( QNetworkReply* reply )
+void UIMain::dataNetworkCache_dataCached( const QUrl& url )
 {
-	reply->deleteLater();
-}
-
-void UIMain::networkAccessManager_cached( const QUrl& url )
-{
-	if ( !url.toString().startsWith( WIITDB_DOMAIN, Qt::CaseInsensitive ) ) {
-		return;
-	}
+	Q_UNUSED( url );
 	
 	// update all views
 	const QList<QAbstractItemView*> views = findChildren<QAbstractItemView*>();
@@ -377,25 +315,25 @@ void UIMain::networkAccessManager_cached( const QUrl& url )
 	const QUrl urlCDCustom = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::DiscCustom, mLastDiscId );
 	const QUrl urlCover = QWBFS::WiiTDB::Covers::url( QWBFS::WiiTDB::Covers::Cover, mLastDiscId );
 	
-	if ( mCache->hasCacheData( urlCD ) ) {
+	if ( mCache->hasCachedData( urlCD ) ) {
 		lCDCover->setPixmap( mCache->cachedPixmap( urlCD ) );
 	}
 	
-	if ( mCache->hasCacheData( urlCDCustom ) ) {
+	if ( mCache->hasCachedData( urlCDCustom ) ) {
 		lCDCover->setPixmap( mCache->cachedPixmap( urlCDCustom ) );
 	}
 	
-	if ( mCache->hasCacheData( urlCover ) ) {
+	if ( mCache->hasCachedData( urlCover ) ) {
 		lCover->setPixmap( mCache->cachedPixmap( urlCover ) );
 	}
 }
 
-void UIMain::networkAccessManager_error( const QUrl& url, const QString& message )
+void UIMain::dataNetworkCache_error( const QString& message, const QUrl& url )
 {
 	switch ( QWBFS::WiiTDB::Covers::type( url ) )
 	{
 		case QWBFS::WiiTDB::Covers::Disc:
-			mCache->get( QNetworkRequest( QWBFS::WiiTDB::Covers( url ).url( QWBFS::WiiTDB::Covers::DiscCustom ) ) );
+			mCache->cacheData( QWBFS::WiiTDB::Covers( url ).url( QWBFS::WiiTDB::Covers::DiscCustom ) );
 			return;
 		case QWBFS::WiiTDB::Covers::HQ:
 		case QWBFS::WiiTDB::Covers::Cover:
@@ -409,9 +347,9 @@ void UIMain::networkAccessManager_error( const QUrl& url, const QString& message
 	qmtbInfos->appendMessage( message );
 }
 
-void UIMain::networkAccessManager_cacheCleared()
+void UIMain::dataNetworkCache_invalidated()
 {
-	networkAccessManager_cached( QUrl() );
+	dataNetworkCache_dataCached( QUrl() );
 }
 
 void UIMain::on_aReloadPartitions_triggered()
@@ -502,95 +440,6 @@ void UIMain::on_aProperties_triggered()
 	dlg->open();
 }
 
-void UIMain::on_aConvertToWBFSFiles_triggered()
-{
-	const QStringList filePaths = QFileDialog::getOpenFileNames( this, tr( "Choose ISO files to convert" ), QString::null, tr( "ISO Files (*.iso)" ) );
-	
-	if ( filePaths.isEmpty() ) {
-		return;
-	}
-	
-	ProgressDialog* dlg = new ProgressDialog( this );
-	
-	WorkerThread::Work work;
-	work.task = WorkerThread::ConvertWBFS;
-	
-	foreach ( const QString& filePath, filePaths ) {
-		work.discs << QWBFS::Model::Disc( filePath );
-	}
-	
-	work.target = QFileInfo( filePaths.first() ).absolutePath();
-	work.window = dlg;
-	
-	dlg->setWork( work );
-}
-
-void UIMain::on_aConvertToISOFiles_triggered()
-{
-	const QStringList filePaths = QFileDialog::getOpenFileNames( this, tr( "Choose WBFS files to convert" ), QString::null, tr( "WBFS Files (*.wbfs)" ) );
-	
-	if ( filePaths.isEmpty() ) {
-		return;
-	}
-	
-	ProgressDialog* dlg = new ProgressDialog( this );
-	
-	WorkerThread::Work work;
-	work.task = WorkerThread::ConvertISO;
-	
-	foreach ( const QString& filePath, filePaths ) {
-		work.discs << QWBFS::Model::Disc( filePath );
-	}
-	
-	work.target = QFileInfo( filePaths.first() ).absolutePath();
-	work.window = dlg;
-	
-	dlg->setWork( work );
-}
-
-void UIMain::on_aRenameDiscsInFolder_triggered()
-{
-	const QString path = QFileDialog::getExistingDirectory( this, tr( "Choose the folder to scan for ISOs/WBFSs files" ) );
-	
-	if ( path.isEmpty() ) {
-		return;
-	}
-	
-	/*
-		%title = Game Title
-		%id = Game ID
-		%suffix = File Suffix
-	*/
-	const QStringList patterns = QStringList()
-		<< "%id.%suffix" // GAMEID.wbfs
-		<< "%title [%id].%suffix" // Game Title [GAMEID].wbfs
-		<< "%id_%title/%id.%suffix" // GAMEID_Game Title/GAMEID.wbfs
-		<< "%title/%id.%suffix" // Game Title/GAMEID.wbfs
-		<< "%title[%id]/%id.%suffix" // Game Title[GAMEID]/GAMEID.wbfs
-		;
-	const QString text = tr( "Choose the pattern to apply:\n%1\n%2\n%3\n" )
-		.arg( tr( "%1 = Game Title" ).arg( "%title" ) )
-		.arg( tr( "%1 = Game Id" ).arg( "%id" ) )
-		.arg( tr( "%1 = File Suffix" ).arg( "%suffix" ) )
-		;
-	bool ok;
-	const QString pattern = QInputDialog::getItem( this, QString::null, text, patterns, 0, true, &ok );
-	
-	if ( !ok || pattern.isEmpty() ) {
-		return;
-	}
-	
-	ProgressDialog* dlg = new ProgressDialog( this );
-	
-	WorkerThread::Work work;
-	work.task = WorkerThread::RenameAll;
-	work.pattern = pattern;
-	work.target = path;
-	work.window = dlg;
-	
-	dlg->setWork( work );
-}
-
 void UIMain::on_tvFolders_activated( const QModelIndex& index )
 {
 	const QString filePath = mFoldersModel->filePath( index );
@@ -658,39 +507,9 @@ void UIMain::on_tbExport_clicked()
 		return;
 	}
 	
-	WorkerThread::Work work;
-	work.discs = mExportModel->discs();
-	work.target = path;
-	
-	const QMessageBox::StandardButtons buttons = QMessageBox::Yes | QMessageBox::Ok;
-	const QMessageBox::StandardButton defaultButton = QMessageBox::Ok;
-	
-	QMessageBox msgBox( this );
-	msgBox.setIcon( QMessageBox::Question );
-	msgBox.setText( tr( "Which format do you want to use to export the discs ?" ) );
-	msgBox.setStandardButtons( buttons );
-	msgBox.button( QMessageBox::Yes )->setText( "ISO" );
-	msgBox.button( QMessageBox::Ok )->setText( "WBFS" );
-	msgBox.setEscapeButton( 0 );
-	msgBox.setDefaultButton( defaultButton );
-	
-	switch ( msgBox.exec() ) {
-		case QMessageBox::Yes:
-			work.task = WorkerThread::ExportISO;
-			break;
-		case QMessageBox::Ok:
-			work.task = WorkerThread::ExportWBFS;
-			break;
-		default:
-			Q_ASSERT( 0 );
-			return;
-	}
-	
 	ProgressDialog* dlg = new ProgressDialog( this );
 	
 	connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
 	
-	work.window = dlg;
-	
-	dlg->setWork( work );
+	dlg->exportDiscs( mExportModel->discs(), path );
 }

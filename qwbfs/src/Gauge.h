@@ -54,8 +54,8 @@ public:
 	qint64 freeSize() const;
 	qint64 temporarySize() const;
 	
-	static QString fileSizeAdaptString( qreal nb );
-	static QString fileSizeToString( qreal size );
+	static QString fileSizeAdaptString( double nb );
+	static QString fileSizeToString( double size );
 
 public slots:
 	void setSize( qint64 value );

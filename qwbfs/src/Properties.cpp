@@ -34,20 +34,18 @@
 **
 ****************************************************************************/
 #include "Properties.h"
+#include "datacache/DataNetworkCache.h"
 #include "UIMain.h"
 
-#include <Core/pSettings>
-#include <Core/pNetworkAccessManager>
-
+#include <QSettings>
 #include <QDir>
 #include <QCoreApplication>
 #include <QLibraryInfo>
 #include <QDebug>
 
-#define DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE 1024 *1024 *50
-
 #define SETTINGS_CACHE_WORKING_PATH "cache/workingPath"
 #define SETTINGS_CACHE_DISK_SIZE "cache/diskSize"
+#define SETTINGS_CACHE_MEMORY_SIZE "cache/memorySize"
 #define SETTINGS_CACHE_USE_TEMPORARY_WORKING_PATH "cache/useTemporaryWorkingPath"
 #define SETTINGS_PROXY_TYPE "proxy/type"
 #define SETTINGS_PROXY_SERVER "proxy/server"
@@ -61,14 +59,12 @@
 #define SETTINGS_LOCALE_CURRENT "locale/current"
 #define SETTINGS_WINDOW_GEOMETRY "window/geometry"
 #define SETTINGS_WINDOW_STATE "window/state"
-#define SETTINGS_WINDOW_SELECTED_PATH "window/selectedPath"
-#define SETTINGS_PARTITION_WIDGET_STATE "partitionWidget/state"
-#define SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION "partitionWidget/selectedPartition"
+#define SETTINGS_PARTITION_WIDGET_STATE "partitionWidget"
 
 Properties::Properties( QObject* parent )
 	: QObject( parent )
 {
-	mSettings = new pSettings( this );
+	mSettings = new QSettings( this );
 	//qWarning() << mSettings->fileName();
 }
 
@@ -96,9 +92,19 @@ qint64 Properties::cacheDiskSize() const
 	return mSettings->value( SETTINGS_CACHE_DISK_SIZE, DATA_NETWORK_CACHE_DEFAULT_DISK_SIZE ).value<qint64>();
 }
 
-void Properties::setCacheDiskSize( qint64 sizeByte )
+void Properties::setCacheDiskSize( qint64 sizeKb )
 {
-	mSettings->setValue( SETTINGS_CACHE_DISK_SIZE, sizeByte );
+	mSettings->setValue( SETTINGS_CACHE_DISK_SIZE, sizeKb );
+}
+
+qint64 Properties::cacheMemorySize() const
+{
+	return mSettings->value( SETTINGS_CACHE_MEMORY_SIZE, DATA_NETWORK_CACHE_DEFAULT_MEMORY_SIZE ).value<qint64>();
+}
+
+void Properties::setCacheMemorySize( qint64 sizeKb )
+{
+	mSettings->setValue( SETTINGS_CACHE_MEMORY_SIZE, sizeKb );
 }
 
 bool Properties::cacheUseTemporaryPath() const
@@ -185,38 +191,30 @@ QStringList Properties::translationsPaths() const
 {
 	QSet<QString> translationsPaths = mSettings->value( SETTINGS_TRANSLATIONS_PATHS ).toStringList().toSet();
 	
-	if ( translationsPaths.isEmpty() ) {
-		translationsPaths << QLibraryInfo::location( QLibraryInfo::TranslationsPath );
-		
+	translationsPaths << QLibraryInfo::location( QLibraryInfo::TranslationsPath );
+	
 #if defined( Q_OS_WIN )
-		// sources ones
-		translationsPaths << "qt/translations";
-		translationsPaths << "translations";
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
+	// sources ones
+	translationsPaths << "qt/translations";
+	translationsPaths << "translations";
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
 #elif defined( Q_OS_MAC )
-		// sources ones
-		translationsPaths << "../Resources/qt/translations";
-		translationsPaths << "../Resources/translations";
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/qt/ranslations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../fresh/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../../../fresh/translations" );
+	// sources ones
+	translationsPaths << "../Resources/qt/translations";
+	translationsPaths << "../Resources/translations";
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/qt/ranslations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../Resources/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../../translations" );
 #else
-		// sources ones
-		translationsPaths << "qt/translations";
-		translationsPaths << "translations";
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../fresh/translations" );
-		translationsPaths << QCoreApplication::applicationDirPath().append( "/../../../fresh/translations" );
+	// sources ones
+	translationsPaths << "qt/translations";
+	translationsPaths << "translations";
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/qt/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/translations" );
+	translationsPaths << QCoreApplication::applicationDirPath().append( "/../translations" );
 #endif
-	}
 
 	//qWarning() << translationsPaths;
 	
@@ -270,26 +268,6 @@ void Properties::saveState( UIMain* window )
 	
 	mSettings->setValue( SETTINGS_WINDOW_GEOMETRY, geometry );
 	mSettings->setValue( SETTINGS_WINDOW_STATE, state );
-}
-
-QString Properties::selectedPath() const
-{
-	return mSettings->value( SETTINGS_WINDOW_SELECTED_PATH ).toString();
-}
-
-void Properties::setSelectedPath( const QString& path )
-{
-	mSettings->setValue( SETTINGS_WINDOW_SELECTED_PATH, path );
-}
-
-QString Properties::selectedPartition() const
-{
-	return mSettings->value( SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION ).toString();
-}
-
-void Properties::setSelectedPartition( const QString& partition )
-{
-	mSettings->setValue( SETTINGS_PARTITION_WIDGET_SELECTED_PARTITION, partition );
 }
 
 QString Properties::decrypt( const QByteArray& data )

@@ -58,7 +58,10 @@ public:
 	void setCacheWorkingPath( const QString& path );
 	
 	qint64 cacheDiskSize() const;
-	void setCacheDiskSize( qint64 sizeByte );
+	void setCacheDiskSize( qint64 sizeKb );
+	
+	qint64 cacheMemorySize() const;
+	void setCacheMemorySize( qint64 sizeKb );
 	
 	bool cacheUseTemporaryPath() const;
 	void setCacheUseTemporaryPath( bool useTemporary );
@@ -95,12 +98,6 @@ public:
 	
 	void restoreState( UIMain* window ) const;
 	void saveState( UIMain* window );
-	
-	QString selectedPath() const;
-	void setSelectedPath( const QString& path );
-	
-	QString selectedPartition() const;
-	void setSelectedPartition( const QString& partition );
 	
 	static QString decrypt( const QByteArray& data );
 	static QByteArray crypt( const QString& string );

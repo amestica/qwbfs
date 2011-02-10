@@ -33,17 +33,15 @@ int wbfs_read_file(void*handle, int len, void *buf)
 {
         return fread(buf,len,1,(FILE*)handle);
 }
-int wbfs_close_file(void *handle)
+void wbfs_close_file(void *handle)
 {
-        return fclose((FILE*)handle) == 0 ? 0 : 1;
+        fclose((FILE*)handle);
 }
-int wbfs_file_reserve_space(void*handle, long long size)
+void wbfs_file_reserve_space(void*handle, long long size)
 {
         FILE*f=(FILE*)handle;
-		int result;
         fseeko(f, size-1ULL, SEEK_SET);
-        result = fwrite("", 1, 1, f);
-		return result == 1 ? 0 : 1;
+        fwrite("", 1, 1, f);
 }
 void wbfs_file_truncate(void *handle,long long size)
 {
@@ -61,7 +59,7 @@ int wbfs_read_wii_file(void*handle,u32 offset,u32 count,void*iobuf)
                 return 1;
         }
         if (fread(iobuf, count, 1, fp) != 1){
-                wbfs_error("error reading disc 2");
+                wbfs_error("error reading disc");
                 return 1;
 	}
 	return 0;
@@ -97,7 +95,7 @@ static int wbfs_fread_sector(void *_fp,u32 lba,u32 count,void*buf)
 		return 1;
 	}
 	if (fread(buf, count*512ULL, 1, fp) != 1){
-		wbfs_error("error reading disc 1");
+		wbfs_error("error reading disc");
 		return 1;
 	}
 	return 0;

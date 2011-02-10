@@ -37,18 +37,15 @@
 #include "DiscModel.h"
 #include "qwbfsdriver/Driver.h"
 #include "Gauge.h"
+#include "datacache/DataNetworkCache.h"
 #include "wiitdb/Covers.h"
 
-#include <Core/pNetworkAccessManager>
-#include <Gui/pIconManager>
-
 #include <QPainter>
-#include <QPixmapCache>
 #include <QDebug>
 
 using namespace QWBFS::Model;
 
-DiscDelegate::DiscDelegate( QWBFS::Model::DiscModel* parent, pNetworkAccessManager* cache )
+DiscDelegate::DiscDelegate( QWBFS::Model::DiscModel* parent, DataNetworkCache* cache )
 	: QStyledItemDelegate( parent )
 {
 	Q_ASSERT( parent );
@@ -76,15 +73,19 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 	
 	// selection
 	if ( selected ) {
+		painter->save();
 		painter->setPen( QColor( 145, 147, 255, 130 ) );
 		painter->setBrush( QColor( 184, 153, 255, 130 ) );
 		painter->drawPath( path );
+		painter->restore();
 	}
 	// background
 	else {
+		painter->save();
 		painter->setPen( Qt::NoPen );
 		painter->setBrush( QColor( 200, 200, 200, index.row() %2 == 0 ? 100 : 60 ) );
 		painter->drawPath( path );
+		painter->restore();
 	}
 	
 	QRect rect;
@@ -102,16 +103,15 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 		text = QString( "%1 - %2 (%3 - %4)" ).arg( disc.id ).arg( disc.title ).arg( QWBFS::Driver::regionToString( disc.region ) ).arg( QWBFS::Driver::regionToLanguageString( disc.region ) );
 		text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
 		
+		painter->save();
 		painter->setFont( font );
-		painter->setPen( QColor( 0, 0, 0 ) );
-		painter->setBrush( Qt::NoBrush );
 		painter->drawText( rect, Qt::AlignLeft | Qt::AlignVCenter, text );
+		painter->restore();
 	}
 	
 	// size/origin
 	{
 		QFont font = painter->font();
-		font.setBold( false );
 		font.setPixelSize( 9 );
 		
 		QFontMetricsF metrics( font );
@@ -120,64 +120,49 @@ void DiscDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _option
 		text = tr( "Estimated size: %1 - Origin: %2" ).arg( Gauge::fileSizeToString( disc.size ) ).arg( disc.origin );
 		text = metrics.elidedText( text, Qt::ElideRight, rect.width() );
 		
+		painter->save();
 		painter->setFont( font );
-		painter->setPen( QColor( 0, 0, 0 ) );
-		painter->setBrush( Qt::NoBrush );
 		painter->drawText( rect, Qt::AlignLeft | Qt::AlignVCenter, text );
+		painter->restore();
 	}
 	
-	QPixmap pixmap;
-	
-	rect = option.rect;
-	rect = option.rect.adjusted( 8, 5, -rect.width() +40 -5, -5 );
+	QIcon icon;
 	
 	if ( disc.state == QWBFS::Driver::None ) {
 		const QWBFS::WiiTDB::Covers cover( disc.id );
-		QString url;
+		QByteArray data;
 		
-		if ( mCache->hasCacheData( cover.url( QWBFS::WiiTDB::Covers::Disc ) ) ) {
-			url = cover.url( QWBFS::WiiTDB::Covers::Disc ).toString();
+		if ( mCache->hasCachedData( cover.url( QWBFS::WiiTDB::Covers::Disc ) ) ) {
+			data = *mCache->cachedData( cover.url( QWBFS::WiiTDB::Covers::Disc ) );
 		}
-		else if ( mCache->hasCacheData( cover.url( QWBFS::WiiTDB::Covers::DiscCustom ) ) ) {
-			url = cover.url( QWBFS::WiiTDB::Covers::DiscCustom ).toString();
+		else if ( mCache->hasCachedData( cover.url( QWBFS::WiiTDB::Covers::DiscCustom ) ) ) {
+			data = *mCache->cachedData( cover.url( QWBFS::WiiTDB::Covers::DiscCustom ) );
 		}
 		else {
-			url = cover.url( QWBFS::WiiTDB::Covers::Disc ).toString();
+			mCache->cacheData( cover.url( QWBFS::WiiTDB::Covers::Disc ) );
 		}
 		
-		const QString key = QString( "%1-%2-%3" ).arg( url ).arg( rect.width() ).arg( rect.height() );
-		
-		if ( !QPixmapCache::find( key, pixmap ) ) {
-			if ( !mCache->hasCacheData( url ) ) {
-				mCache->get( QNetworkRequest( url ) );
-				return;
+		if ( !data.isNull() ) {
+			QPixmap pixmap;
+			
+			if ( pixmap.loadFromData( data ) ) {
+				icon.addPixmap( pixmap );
 			}
-			
-			QIODevice* data = mCache->cacheData( url );
-			
-			if ( data && pixmap.loadFromData( data->readAll() ) ) {
-				pixmap = pixmap.scaled( rect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation );
-				QPixmapCache::insert( key, pixmap );
-			}
-			
-			delete data;
 		}
 	}
 	else {
-		const QString url = disc.state == QWBFS::Driver::Success ? ":/icons/256/success.png" : ":/icons/256/error.png";
-		const QString key = QString( "%1-%2-%3" ).arg( url ).arg( rect.width() ).arg( rect.height() );
-		
-		if ( !QPixmapCache::find( key, pixmap ) ) {
-			if ( pixmap.load( url ) ) {
-				pixmap = pixmap.scaled( rect.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation );
-				QPixmapCache::insert( key, pixmap );
-			}
-		}
+		icon.addPixmap( QPixmap( disc.state == QWBFS::Driver::Success ? ":/icons/256/success.png" : ":/icons/256/error.png" ) );
 	}
 	
 	// icon
-	if ( !pixmap.isNull() ) {
-		painter->drawPixmap( rect.topLeft(), pixmap );
+	if ( !icon.isNull() ) {
+		rect = option.rect;
+		rect = option.rect.adjusted( 8, 5, -rect.width() +40 -5, -5 );
+		
+		painter->save();
+		painter->setClipRect( rect );
+		icon.paint( painter, rect, Qt::AlignCenter );
+		painter->restore();
 	}
 }
 

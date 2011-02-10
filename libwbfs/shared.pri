@@ -11,9 +11,6 @@
 ##
 ###########################################################################################
 
-CONFIG	-= debug_and_release release debug warn_off warn_on
-CONFIG	*= release warn_on
-
 DEFINES *= LARGE_FILES _FILE_OFFSET_BITS=64
 LIB_WBFS_PWD	= $$PWD
 LIB_WBFS_BUILD_PATH	= $${LIB_WBFS_PWD}/../build
@@ -22,12 +19,11 @@ INCLUDEPATH	*= $${LIB_WBFS_PWD}
 DEPENDPATH	*= $${LIB_WBFS_PWD}
 
 win32 {
-	OS	= $$lower( $$QMAKE_HOST.os )
-	#OS=$$system( "uname -s" )
+	OS=$$system( "uname -s" )
 	
 	OPENSSL_INSTALL_DIR = D:/Developpement/OpenSSL
-	isEqual( OS, "darwin" ):OPENSSL_INSTALL_DIR	= $(HOME)/Win32Libraries
-	else:isEqual( OS, "linux" ):OPENSSL_INSTALL_DIR	= $(HOME)/.wine/drive_c/Development/OpenSSL
+	isEqual( OS, "Darwin" ):OPENSSL_INSTALL_DIR	= $(HOME)/Win32Libraries
+	else:isEqual( OS, "Linux" ):OPENSSL_INSTALL_DIR	= $(HOME)/.wine/drive_c/Development/OpenSSL
 	
 	*-g++*:LIBS	*= -L$${OPENSSL_INSTALL_DIR}/lib -L$${OPENSSL_INSTALL_DIR}/lib/MinGW
 	*-msvc*:LIBS	*= -L$${OPENSSL_INSTALL_DIR}/lib -L$${OPENSSL_INSTALL_DIR}/lib/VC

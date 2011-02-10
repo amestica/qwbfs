@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>625</width>
-    <height>343</height>
+    <width>637</width>
+    <height>355</height>
    </rect>
   </property>
   <property name="iconSize">
@@ -40,7 +40,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="pDockWidget" name="dwTools">
+  <widget class="QDockWidget" name="dwTools">
    <property name="features">
     <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
@@ -267,7 +267,7 @@
    <addaction name="aQuit"/>
    <addaction name="separator"/>
   </widget>
-  <widget class="pDockWidget" name="dwCovers">
+  <widget class="QDockWidget" name="dwCovers">
    <property name="minimumSize">
     <size>
      <width>184</width>
@@ -369,33 +369,6 @@
     <string>Properties</string>
    </property>
   </action>
-  <action name="aConvertToWBFSFiles">
-   <property name="icon">
-    <iconset resource="../resources/resources.qrc">
-     <normaloff>:/icons/128/iso-to-wbfs.png</normaloff>:/icons/128/iso-to-wbfs.png</iconset>
-   </property>
-   <property name="text">
-    <string>Convert ISO Files</string>
-   </property>
-  </action>
-  <action name="aConvertToISOFiles">
-   <property name="icon">
-    <iconset resource="../resources/resources.qrc">
-     <normaloff>:/icons/128/wbfs-to-iso.png</normaloff>:/icons/128/wbfs-to-iso.png</iconset>
-   </property>
-   <property name="text">
-    <string>Convert WBFS Files</string>
-   </property>
-  </action>
-  <action name="aRenameDiscsInFolder">
-   <property name="icon">
-    <iconset resource="../resources/resources.qrc">
-     <normaloff>:/icons/256/read-partition.png</normaloff>:/icons/256/read-partition.png</iconset>
-   </property>
-   <property name="text">
-    <string>Rename Discs in folder</string>
-   </property>
-  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -407,13 +380,7 @@
   <customwidget>
    <class>pQueuedMessageToolBar</class>
    <extends>QToolBar</extends>
-   <header location="global">Gui/pQueuedMessageToolBar</header>
-  </customwidget>
-  <customwidget>
-   <class>pDockWidget</class>
-   <extends>QDockWidget</extends>
-   <header location="global">Gui/pDockWidget</header>
-   <container>1</container>
+   <header location="global">pQueuedMessageToolBar.h</header>
   </customwidget>
  </customwidgets>
  <resources>

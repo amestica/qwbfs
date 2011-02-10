@@ -11,8 +11,8 @@
 ##
 ###########################################################################################
 
-CONFIG	-= debug_and_release release debug warn_off warn_on
-CONFIG	*= release warn_on
+CONFIG	-= debug
+CONFIG	*= debug_and_release
 
 CONFIG(debug, debug|release) {
 	#Debug

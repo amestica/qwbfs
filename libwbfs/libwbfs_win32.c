@@ -41,26 +41,17 @@ int wbfs_read_file(void*handle, int len, void *buf)
 	return read;
 }
 
-int wbfs_close_file(void *handle)
+void wbfs_close_file(void *handle)
 {
-	return CloseHandle((HANDLE)handle) == 0 ? 1 : 0;
+	CloseHandle((HANDLE)handle);
 }
 
-int wbfs_file_reserve_space(void*handle,long long size)
+void wbfs_file_reserve_space(void*handle,long long size)
 {
-	int result;
 	LARGE_INTEGER large;
 	large.QuadPart = size;
-	result = SetFilePointerEx((HANDLE)handle, large, NULL, FILE_BEGIN);
-	if ( result != 0 ) {
-		result = SetEndOfFile((HANDLE)handle);
-	}
-	return result == 0 ? 1 : 0;
-}
-
-void wbfs_file_truncate(void *handle,long long size)
-{
-	_chsize(fileno((FILE*)handle),size);
+	SetFilePointerEx((HANDLE)handle, large, NULL, FILE_BEGIN);
+	SetEndOfFile((HANDLE)handle);
 }
 
 int wbfs_read_wii_file(void *_handle, u32 _offset, u32 count, void *buf)

@@ -6,15 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>425</width>
-    <height>510</height>
+    <width>428</width>
+    <height>521</height>
    </rect>
   </property>
-  <property name="maximumSize">
-   <size>
-    <width>425</width>
-    <height>510</height>
-   </size>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>About...</string>
@@ -224,12 +224,6 @@
            </disabled>
           </palette>
          </property>
-         <property name="font">
-          <font>
-           <family>Arial</family>
-           <pointsize>9</pointsize>
-          </font>
-         </property>
          <property name="frameShape">
           <enum>QFrame::NoFrame</enum>
          </property>
@@ -238,6 +232,9 @@
          </property>
          <property name="undoRedoEnabled">
           <bool>false</bool>
+         </property>
+         <property name="lineWrapMode">
+          <enum>QPlainTextEdit::NoWrap</enum>
          </property>
          <property name="readOnly">
           <bool>true</bool>

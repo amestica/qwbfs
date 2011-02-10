@@ -56,13 +56,15 @@ class Driver : public QObject
 	Q_OBJECT
 	
 public:
-	enum State {
+	enum State
+	{
 		None = 0,
 		Success,
 		Failed
 	};
 	
-	enum Error {
+	enum Error
+	{
 		Ok = 0,
 		PartitionNotOpened = -1,
 		SourcePartitionNotOpened = -2,
@@ -70,22 +72,12 @@ public:
 		DiscWriteFailed = -4,
 		DiscExtractFailed = -5,
 		DiscAddFailed = -6,
-		DiscConvertFailed = -7,
-		DiscRenameFailed = -8,
-		DiscFound = -9,
-		DiscNotFound = -10,
-		InvalidDiscIndex = -11,
-		InvalidDiscID = -12,
-		InvalidDisc = -13,
-		CantDrive2Drive = -14,
-		UnknownError = -1000
-	};
-	
-	enum FileType {
-		UnknownFile = 0,
-		WBFSPartitionFile,
-		WBFSFile,
-		ISOFile
+		DiscFound = -7,
+		DiscNotFound = -8,
+		InvalidDiscIndex = -9,
+		InvalidDiscID = -10,
+		InvalidDisc = -11,
+		CantDrive2Drive = -12
 	};
 	
 	Driver( QObject* parent = 0, const QWBFS::Partition::Handle& partitionHandle = QWBFS::Partition::Handle() );
@@ -207,44 +199,17 @@ public:
 	*/
 	int hasDisc( const QString& discId ) const;
 	/*!
-		\details list all dics in the partition
-		\param list the list to fill of discs
-		\return Ok or wbfs error code
+		\details 
+		\param paramName paramDescription
+		\return returnDescription
 	*/
 	int discList( QWBFS::Model::DiscList& list ) const;
 	/*!
-		\details truncate the file system to its minimum size (for creating stand alone wbfs files)
-		\return PartitionNotOpened or Ok
-	*/
-	int trim() const;
-	/*!
-		\details return if a file is a wbfs partition/file.
+		\details return if a file is a wbfs partition.
 		\param fileName the fileName to check.
-		\return return true if fileName is a wbfs partition/file, else false.
+		\return return true if fileName is a wbfs partition, else false.
 	*/
-	static bool isWBFSPartitionOrFile( const QString& fileName );
-	/*!
-		\details initialize a file having \a size bytes
-		\param filePath the filepath where to initialize the file
-		\param size the size to allocate in the file
-		\return DiscWriteFailed or Ok
-	*/
-	static int allocateFile( const QString& filePath, qint64 size = -1 );
-	/*!
-		\details return a filled disc structure.
-		\param wbfsFileName the wbfs file to get informations from.
-		\param partitionSelector the partition selector.
-		\param disc the disc to fill informations.
-		\return InvalidDisc or Ok
-	*/
-	static int wbfsFileInfo( const QString& wbfsFileName, QWBFS::Model::Disc& disc );
-	/*!
-		\details convert an iso file to a wbfs file
-		\param isoFilePath the source iso file path
-		\param wbfsFilePath the target wbfs file path if setted, else isoFilePath +".wbfs"
-		\return DiscReadFailed, addDiscImage result or Ok
-	*/
-	static int convertIsoFileToWBFSFile( const QString& isoFilePath, const QString& wbfsFilePath = QString::null );
+	static bool isWBFSPartition( const QString& fileName );
 	/*!
 		\details return a string representation of the error.
 		\param error the error to represent.
@@ -285,13 +250,6 @@ public:
 	static void addHandle( const QWBFS::Partition::Handle& handle );
 	static QWBFS::Partition::Handle getHandle( const QString& partition, bool* created = 0 );
 	static void closeHandle( const QWBFS::Partition::Handle& handle );
-	
-	static void discInfo( u8* header, QWBFS::Model::Disc& disc );
-	static qint64 minimumWBFSFileSize();
-	static QWBFS::Model::Disc isoDiscInfo( const QString& filePath );
-	static Driver::FileType fileType( const QString& filePath );
-	
-	static QTime estimatedTimeForTask( int value, int maximum );
 
 protected:
 	mutable QWBFS::Partition::Properties mProperties;
@@ -306,6 +264,7 @@ protected:
 	static QHash<int, QString> mRegions;
 	
 	static int u8StrLength( u8* str );
+	static void discInfo( u8* header, QWBFS::Model::Disc& disc );
 	
 	static int discRead_callback( void* fp, u32 lba, u32 count, void* iobuf );
 	static void progress_callback( int value, int maximum );

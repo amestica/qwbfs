@@ -39,9 +39,7 @@
 #include <QTimer>
 #include <QDebug>
 
-#include <Core/pSettings>
-#include <Core/pTranslationManager>
-#include <Gui/pIconManager>
+#include <pTranslationManager.h>
 
 #include "main.h"
 #include "UIMain.h"
@@ -94,21 +92,17 @@ int main( int argc, char** argv )
 	app.setOrganizationDomain( APPLICATION_DOMAIN );
 	app.setWindowIcon( QIcon( ":/icons/qwbfsmanager.png" ) );
 	
-	Q_INIT_RESOURCE( fresh );
 	Q_UNUSED( QT_TRANSLATE_NOOP( "QObject", "The Free, Fast and Powerful cross platform Wii Backup File System manager" ) );
-	
-	pSettings::setDefaultProperties( pSettings::Properties( APPLICATION_NAME, APPLICATION_VERSION, pSettings::Auto ) );
 	
 	pTranslationManager* translationManager = pTranslationManager::instance();
 	translationManager->setFakeCLocaleEnabled( true );
 	translationManager->addTranslationsMask( "qt*.qm" );
-	translationManager->addTranslationsMask( "fresh*.qm" );
 	translationManager->addTranslationsMask( "qwbfsmanager*.qm" );
 	translationManager->addForbiddenTranslationsMask( "qt_help*.qm" );
 	
 	QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
 	
-	SplashScreen splash( pIconManager::pixmap( "splashscreen.png", ":/icons" ) );
+	SplashScreen splash( QPixmap( ":/icons/splashscreen.png" ) );
 	UIMain w;
 	
 	splash.handle( &w );	

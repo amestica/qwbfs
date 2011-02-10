@@ -39,15 +39,14 @@
 #include <QString>
 #include <QUrl>
 
-#define WIITDB_DOMAIN "http://wiitdb.com"
-
 namespace QWBFS {
 namespace WiiTDB {
 
 class Covers
 {
 public:
-	enum Type {
+	enum Type
+	{
 		Invalid,
 		HQ,
 		Cover,
@@ -66,8 +65,8 @@ public:
 	bool operator==( const Covers& other ) const;
 	bool operator!=( const Covers& other ) const;
 	
-	QUrl url( Covers::Type type ) const;
-	static QUrl url( Covers::Type type, const QString& id );
+	QUrl url( Type type ) const;
+	static QUrl url( Type type, const QString& id );
 	static Type type( const QUrl& url );
 
 protected:

@@ -39,8 +39,7 @@
 #include "models/DiscDelegate.h"
 #include "ProgressDialog.h"
 #include "UIMain.h"
-
-#include <Core/pNetworkAccessManager>
+#include "datacache/DataNetworkCache.h"
 
 #include <QLineEdit>
 #include <QInputDialog>
@@ -356,11 +355,5 @@ void PartitionWidget::on_tbImport_clicked()
 	connect( dlg, SIGNAL( jobFinished( const QWBFS::Model::Disc& ) ), this, SLOT( progress_jobFinished( const QWBFS::Model::Disc& ) ) );
 	connect( dlg, SIGNAL( finished() ), this, SLOT( progress_finished() ) );
 	
-	WorkerThread::Work work;
-	work.task = WorkerThread::ImportWBFS;
-	work.discs = mImportModel->discs();
-	work.target = mDriver->handle().partition();
-	work.window = dlg;
-	
-	dlg->setWork( work );
+	dlg->importDiscs( mImportModel->discs(), mDriver->handle() );
 }

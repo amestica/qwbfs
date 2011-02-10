@@ -39,9 +39,8 @@
 #include "ui_UIMain.h"
 
 class QFileSystemModel;
-class QNetworkReply;
-class pNetworkAccessManager;
-class pPaypalButton;
+class DataNetworkCache;
+class PaypalDonationWidget;
 class pUpdateChecker;
 
 namespace QWBFS {
@@ -60,46 +59,40 @@ public:
 	
 	virtual bool event( QEvent* event );
 	
-	pNetworkAccessManager* cache() const;
+	DataNetworkCache* cache() const;
 
 protected:
-	QMenu* mActions;
-	pPaypalButton* mDonationWidget;
+	PaypalDonationWidget* mDonationWidget;
 	QStringList mPartitions;
 	QFileSystemModel* mFoldersModel;
 	QFileSystemModel* mFilesModel;
 	QWBFS::Model::DiscModel* mExportModel;
-	pNetworkAccessManager* mCache;
+	DataNetworkCache* mCache;
 	QString mLastDiscId;
 	pUpdateChecker* mUpdateChecker;
 	
 	virtual void showEvent( QShowEvent* event );
 	virtual void closeEvent( QCloseEvent* event );
-	virtual bool eventFilter( QObject* object, QEvent* event );
 	
+	void localeChanged();
+	void loadProperties();
+	void saveProperties();
 	void connectView( PartitionWidget* widget );
 
 protected slots:
-	void localeChanged();
-	void loadProperties( bool firstInit = true );
-	void saveProperties();
 	void changeLocaleRequested();
 	void propertiesChanged();
 	void openViewRequested();
 	void closeViewRequested();
 	void coverRequested( const QString& id );
 	void progress_jobFinished( const QWBFS::Model::Disc& disc );
-	void networkAccessManager_finished( QNetworkReply* reply );
-	void networkAccessManager_cached( const QUrl& url );
-	void networkAccessManager_error( const QUrl& url, const QString& message );
-	void networkAccessManager_cacheCleared();
+	void dataNetworkCache_dataCached( const QUrl& url );
+	void dataNetworkCache_error( const QString& message, const QUrl& url );
+	void dataNetworkCache_invalidated();
 	void on_aReloadPartitions_triggered();
 	void on_aQuit_triggered();
 	void on_aAbout_triggered();
 	void on_aProperties_triggered();
-	void on_aConvertToWBFSFiles_triggered();
-	void on_aConvertToISOFiles_triggered();
-	void on_aRenameDiscsInFolder_triggered();
 	void on_tvFolders_activated( const QModelIndex& index );
 	void on_tbReloadDrives_clicked();
 	void on_cbDrives_currentIndexChanged( const QString& text );

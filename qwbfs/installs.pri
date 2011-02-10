@@ -19,15 +19,15 @@ unix {
 	}
 	
 	!build_pass {
-		unix:CAN_INSTALL	= 1
-		else:mac:isEqual( MAC_FULL_INSTALL, 1 ):CAN_INSTALL	= 1
-		
-		isEqual( CAN_INSTALL, 1 ) {
+		mac {
+			isEqual( MAC_FULL_INSTALL, 1 ) {
 				message( "The application will be installed to $${PACKAGE_PREFIX}" )
 				message( "You can overwrite the prefix calling qmake with parameter: qmake PREFIX=/usr" )
-		} else:mac {
-			message( "The application bundle will not be installed into $${PACKAGE_PREFIX}." )
-			message( "Call: 'qmake MAC_FULL_INSTALL=1' for install the bundle." )
+			}
+			else {
+				message( "The application bundle will not be installed into $${PACKAGE_PREFIX}." )
+				message( "Call: 'qmake MAC_FULL_INSTALL=1' for install the bundle." )
+			}
 		}
 	}
 	
@@ -36,20 +36,6 @@ unix {
 	qwbfs_translations.files	= $$PWD/../translations/*.qm
 	
 	INSTALLS	+= qwbfs_translations
-	
-	exists( ../fresh/fresh.pro ) {
-		FRESH_LIBRARY_PATH = ../fresh
-	} else:exists( ../../../fresh/fresh.pro ) {
-		FRESH_LIBRARY_PATH = ../../../fresh
-	}
-	
-	!isEmpty( FRESH_LIBRARY_PATH ) {
-		mac:fresh_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/translations
-		else:fresh_translations.path	=	$$[QT_INSTALL_TRANSLATIONS]
-		fresh_translations.files	= $${FRESH_LIBRARY_PATH}/translations/*.qm
-		
-		INSTALLS	+= fresh_translations
-	}
 	
 	mac {
 		qwbfs_qt_translations.path	= $${DESTDIR}/$${TARGET}.app/Contents/Resources/qt/translations
