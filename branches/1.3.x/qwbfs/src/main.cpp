@@ -35,18 +35,14 @@
 ****************************************************************************/
 #include <QApplication>
 #include <QSplashScreen>
-#include <QWeakPointer>
-#include <QDateTime>
+#include <QPointer>
 #include <QTimer>
-#include <QPixmapCache>
 #include <QDebug>
 
-#include <FreshCore/pSettings>
-#include <FreshCore/pNetworkAccessManager>
-#include <FreshCore/pTranslationManager>
 #include <FreshGui/pIconManager>
 
 #include "main.h"
+#include "QWBFS.h"
 #include "UIMain.h"
 
 #define SPLASHSCREEN_TIMEOUT 3000
@@ -75,16 +71,16 @@ public:
 	}
 
 protected:
-	QWeakPointer<QWidget> mWidget;
+	QPointer<QWidget> mWidget;
 	
 	virtual void hideEvent( QHideEvent* event )
 	{
 		QSplashScreen::hideEvent( event );
 		
-		if ( mWidget && !mWidget.data()->isVisible() )
+		if ( mWidget && !mWidget->isVisible() )
 		{
-			mWidget.data()->show();
-			mWidget.data()->raise();
+			mWidget->show();
+			mWidget->raise();
 		}
 	}
 };
@@ -97,21 +93,10 @@ int main( int argc, char** argv )
 	app.setOrganizationDomain( APPLICATION_DOMAIN );
 	app.setWindowIcon( QIcon( ":/icons/qwbfsmanager.png" ) );
 	
-	qsrand( QDateTime( QDate( 0, 0, 0 ) ).secsTo( QDateTime::currentDateTime() ) );
-	QPixmapCache::setCacheLimit( QPixmapCache::cacheLimit() *4 );
-	pNetworkAccessManager::instance()->setCacheDirectory( QDir::tempPath() );
-	
 	Q_INIT_RESOURCE( fresh );
+	QWBFS::init( argc, argv );
+	
 	Q_UNUSED( QT_TRANSLATE_NOOP( "QObject", "The Free, Fast and Powerful cross platform Wii Backup File System manager" ) );
-	
-	pSettings::setDefaultProperties( pSettings::Properties( APPLICATION_NAME, APPLICATION_VERSION, pSettings::Auto ) );
-	
-	pTranslationManager* translationManager = pTranslationManager::instance();
-	translationManager->setFakeCLocaleEnabled( true );
-	translationManager->addTranslationsMask( "qt*.qm" );
-	translationManager->addTranslationsMask( "fresh*.qm" );
-	translationManager->addTranslationsMask( "qwbfsmanager*.qm" );
-	translationManager->addForbiddenTranslationsMask( "qt_help*.qm" );
 	
 	QObject::connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
 	
@@ -119,7 +104,9 @@ int main( int argc, char** argv )
 	UIMain w;
 	
 	splash.handle( &w );	
-	return app.exec();
+	const int result = app.exec();
+	QWBFS::deInit();
+	return result;
 }
 
 #include "main.moc"

@@ -6,30 +6,29 @@
 #include <QDebug>
 
 NativeFileSystem::NativeFileSystem( FileSystemManager* manager )
-    : AbstractFileSystem( manager ),
-        mIsMounted( false )
+    : AbstractFileSystem( manager )
 {
 }
 
 NativeFileSystem::~NativeFileSystem()
 {
-    umount();
+    close();
 }
 
-bool NativeFileSystem::mount( const QString& filePath )
+bool NativeFileSystem::open( const QString& mountPoint )
 {
     if ( isMounted() ) {
-        if ( mFilePath == filePath ) {
+        if ( AbstractFileSystem::mountPoint() == mountPoint ) {
             return true;
         }
         
-        if ( !umount() ) {
+        if ( !close() ) {
             return false;
         }
     }
     
     // TODO: Add QFileSystemWatcher on the directory to track manual change / delete / add ( from file manager )
-    const QFileInfo fileInfo( filePath );
+    const QFileInfo fileInfo( mountPoint );
     
     if (
         !fileInfo.isDir() ||
@@ -40,26 +39,20 @@ bool NativeFileSystem::mount( const QString& filePath )
         return false;
     }
     
-    mFilePath = filePath;
+    mMountPoint = mountPoint;
     buildCache();
     return true;
 }
 
-bool NativeFileSystem::umount()
+bool NativeFileSystem::close()
 {
     if ( isMounted() ) {
         // TODO: add sync() member in abstract class and move mount/umount as non virtual in abstract
         clear();
-        mFilePath.clear();
-        mIsMounted = false;
+        mMountPoint.clear();
     }
     
     return true;
-}
-
-bool NativeFileSystem::isMounted() const
-{
-    return mIsMounted;
 }
 
 bool NativeFileSystem::format()
@@ -74,12 +67,12 @@ QWBFS::FileSystemType NativeFileSystem::type() const
 
 QWBFS::EntryTypes NativeFileSystem::supportedFormats() const
 {
-    return QWBFS::EntryTypeISO | QWBFS::EntryTypeCISO | QWBFS::EntryTypeWBFS;
+    return QWBFS::EntryTypeWiiISO | QWBFS::EntryTypeWiiCISO | QWBFS::EntryTypeWiiWBFS;
 }
 
 QWBFS::EntryType NativeFileSystem::preferredFormat() const
 {
-    return QWBFS::EntryTypeWBFS;
+    return QWBFS::EntryTypeWiiWBFS;
 }
 
 FileSystemEntry::List NativeFileSystem::entries() const
@@ -130,26 +123,12 @@ void NativeFileSystem::clear()
 
 FileSystemEntry NativeFileSystem::createEntry( const QString& filePath ) const
 {
-    const QFileInfo fileInfo( filePath );
-    const QString suffix = fileInfo.suffix().toLower();
-    QWBFS::EntryType format = QWBFS::EntryTypeNone;
-    
-    if ( suffix.compare( "iso", Qt::CaseInsensitive ) == 0 ) {
-        format = QWBFS::EntryTypeISO;
-    }
-    else if ( suffix.compare( "ciso", Qt::CaseInsensitive ) == 0 ) {
-        format = QWBFS::EntryTypeCISO;
-    }
-    else if ( suffix.compare( "wbfs", Qt::CaseInsensitive ) == 0 ) {
-        format = QWBFS::EntryTypeWBFS;
-    }
-    
-    return FileSystemEntry( filePath, fileInfo.fileName(), fileInfo.size(), format );
+    return QWBFS::createEntry( filePath );
 }
 
 void NativeFileSystem::buildCache()
 {
-    QDir dir( mFilePath );
+    QDir dir( mountPoint() );
     const QStringList filters = QStringList()
         << "*.iso"
         << "*.ciso"

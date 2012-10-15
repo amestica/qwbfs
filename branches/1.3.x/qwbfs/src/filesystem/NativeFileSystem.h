@@ -13,9 +13,8 @@ public:
     NativeFileSystem( FileSystemManager* manager );
     virtual ~NativeFileSystem();
     
-    virtual bool mount( const QString& filePath );
-    virtual bool umount();
-    virtual bool isMounted() const;
+    virtual bool open( const QString& mountPoint );
+    virtual bool close();
     virtual bool format();
     
     virtual QWBFS::FileSystemType type() const;
@@ -27,7 +26,7 @@ public:
     virtual FileSystemEntry entry( const QString& id ) const;
     virtual bool hasEntry( const QString& id ) const;
     
-    virtual bool addEntry( const FileSystemEntry& entry, QWBFS::EntryType format = QWBFS::EntryTypeNone );
+    virtual bool addEntry( const FileSystemEntry& entry, QWBFS::EntryType format = QWBFS::EntryTypeUnknown );
     virtual bool removeEntry( const FileSystemEntry& entry );
     virtual void clear();
 
@@ -37,7 +36,6 @@ protected:
     void buildCache();
 
 protected:
-    bool mIsMounted;
     FileSystemEntry::List mEntries;
     QHash<QString, FileSystemEntry*> mCache;
 };

@@ -32,7 +32,7 @@ AbstractFileSystem* FileSystemManager::open( const QString& _filePath, QWBFS::Fi
             case QWBFS::FileSystemTypeNative: {
                 fs = new NativeFileSystem( this );
                 
-                if ( fs->mount( filePath ) ) {
+                if ( fs->open( filePath ) ) {
                     mInstances[ filePath ] = fs;
                 }
                 else {
@@ -64,7 +64,7 @@ int FileSystemManager::close( const QString& _filePath )
         fs->unref();
         
         if ( fs->refCount() == 0 ) {
-            fs->umount();
+            fs->close();
             fs->deleteLater();
             mInstances.remove( filePath );
         }

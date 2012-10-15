@@ -10,7 +10,7 @@
 AbstractFileSystem::AbstractFileSystem( FileSystemManager* manager )
     : QAbstractTableModel( manager ),
         mRefCount( 0 ),
-        mFilePath( QString::null ),
+        mMountPoint( QString::null ),
         mChangeTimeOut( new QTimer( this ) )
 {
     mChangeTimeOut->setSingleShot( true );
@@ -56,9 +56,9 @@ QVariant AbstractFileSystem::data( const QModelIndex& index, int role ) const
 	
 	switch ( role ) {
 		case Qt::DecorationRole: {
-			/*if ( index.column() == 0 ) {
-				return coverPixmap( entry.id(), data( index, AbstractFileSystem::CoverFlowModeSizeHintRole ).toSize() );
-			}*/
+			if ( index.column() == 0 ) {
+				return QWBFS::coverPixmap( QWBFS::WiiTDB::Cover, entry.id(), data( index, AbstractFileSystem::CoverFlowModeSizeHintRole ).toSize() );
+			}
 			
 			break;
 		}
@@ -73,8 +73,7 @@ QVariant AbstractFileSystem::data( const QModelIndex& index, int role ) const
 				case 3:
 					return pCoreUtils::fileSizeToString( entry.size() );
 				case 4:
-					//return QWBFS::Driver::regionToString( entry.region() );
-                    return QVariant();
+					return QWBFS::entryRegionToString( entry.region(), false );
 				case 5:
 					return entry.filePath();
 			}
@@ -82,20 +81,21 @@ QVariant AbstractFileSystem::data( const QModelIndex& index, int role ) const
 			break;
 		}
 		case Qt::ToolTipRole: {
-			/*QStringList values;
+			QStringList values;
 			
-			if ( !disc.id.isEmpty() ) {
-				values << tr( "Id: %1" ).arg( disc.id );
+			if ( !entry.id().isEmpty() ) {
+				values << tr( "Id: %1" ).arg( entry.id() );
 			}
 			
-			values << tr( "Title: %1" ).arg( pCoreUtils::toTitleCase( disc.title ) );
-			values << tr( "Size: %1" ).arg( pCoreUtils::fileSizeToString( disc.size ) );
-			values << tr( "Origin: %1" ).arg( disc.origin );
-			values << tr( "Region: %1" ).arg( QWBFS::Driver::regionToString( disc.region ) );
-			values << tr( "State: %1" ).arg( QWBFS::Driver::stateToString( QWBFS::Driver::State( disc.state ) ) );
-			values << tr( "Error: %1" ).arg( QWBFS::Driver::errorToString( QWBFS::Driver::Error( disc.error ) ) );
+			values << tr( "Title: %1" ).arg( pCoreUtils::toTitleCase( entry.title() ) );
+			values << tr( "Size: %1" ).arg( pCoreUtils::fileSizeToString( entry.size() ) );
+			values << tr( "Origin: %1" ).arg( entry.filePath() );
+			values << tr( "Region (short): %1" ).arg( QWBFS::entryRegionToString( entry.region(), false ) );
+			values << tr( "Region (long): %1" ).arg( QWBFS::entryRegionToString( entry.region(), true ) );
+			/*values << tr( "State: %1" ).arg( QWBFS::stateToString( QWBFS::State( entry.state() ) ) );
+			values << tr( "Error: %1" ).arg( QWBFS::errorToString( QWBFS::Error( entry.error() ) ) );*/
 			
-			return values.join( "\n" );*/
+			return values.join( "\n" );
             break;
 		}
 	}
@@ -164,9 +164,14 @@ int AbstractFileSystem::refCount() const
     return mRefCount;
 }
 
-QString AbstractFileSystem::filePath() const
+QString AbstractFileSystem::mountPoint() const
 {
-    return mFilePath;
+    return mMountPoint;
+}
+
+bool AbstractFileSystem::isMounted() const
+{
+	return !mMountPoint.isEmpty();
 }
 
 void AbstractFileSystem::dataChanged()
