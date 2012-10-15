@@ -11,7 +11,7 @@ public:
     typedef QList<FileSystemEntry> List;
     
     FileSystemEntry();
-    FileSystemEntry( const QString& filePath, const QString& id, qint64 size, QWBFS::EntryType type );
+    FileSystemEntry( const QString& filePath, const QString& id, qint64 size, const QString& title, char region, QWBFS::EntryType type );
     virtual ~FileSystemEntry();
     
     bool operator==( const FileSystemEntry& other ) const;
@@ -21,9 +21,9 @@ public:
     QString id() const;
     qint64 size() const;
     QWBFS::EntryType type() const;
-    
-    QString title() const { return QFileInfo( mFilePath ).baseName(); }
-    QString region() const { return "X"; }
+    QWBFS::EntryState state() const;
+    QString title() const;
+    char region() const;
     
     QString toString() const
     {
@@ -35,13 +35,15 @@ public:
             "type: %4\n"
             "title: %5\n"
             "region: %6\n"
+            "state: %7"
         )
             .arg( mFilePath )
             .arg( mId )
             .arg( mSize )
             .arg( mType )
-            .arg( title() )
-            .arg( region() )
+            .arg( mTitle )
+            .arg( mRegion )
+            .arg( mState )
         ;
     }
 
@@ -50,6 +52,10 @@ protected:
     QString mId;
     qint64 mSize;
     QWBFS::EntryType mType;
+    QWBFS::EntryState mState;
+    QString mTitle;
+    char mRegion;
+    
 };
 
 

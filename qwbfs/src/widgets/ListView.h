@@ -3,7 +3,7 @@
 ** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
-** FileName  : Covers.h
+** FileName  : ListView.h
 ** Date      : 2010-06-16T14:19:29
 ** License   : GPL2
 ** Home Page : http://code.google.com/p/qwbfs
@@ -33,36 +33,59 @@
 ** wish to do so, delete this exception statement from your version.
 **
 ****************************************************************************/
-#ifndef COVERS_H
-#define COVERS_H
+#ifndef LISTVIEW_H
+#define LISTVIEW_H
 
-#include <QString>
-#include <QUrl>
-#include <QPixmap>
+#include <QListView>
 
+#include "wiitdb/Covers.h"
+
+class QHeaderView;
 class pNetworkAccessManager;
+class AbstractFileSystem;
+class ListViewDelegate;
 
-#define WIITDB_DOMAIN "http://wiitdb.com"
+typedef QPair<QRect, QModelIndex> QItemViewPaintPair;
+typedef QList<QItemViewPaintPair> QItemViewPaintPairs;
 
-namespace QWBFS {
-namespace WiiTDB {
-	enum Scan {
-		CoverInvalid,
-		CoverFull,
-		CoverHQ,
-		Cover,
-		Cover3D,
-		CoverDisc,
-		CoverDiscCustom
-	};
+#define HEADER_HEIGHT 21
+
+class ListView : public QListView
+{
+	Q_OBJECT
 	
-	QUrl checkPixmapCache( WiiTDB::Scan scan, const QString& id, pNetworkAccessManager* cache );
+public:
+	ListView( QWidget* parent = 0 );
+	virtual ~ListView();
 	
-	QUrl coverUrl( WiiTDB::Scan scan, const QString& id, const QString& language = QString::null );
-	QPixmap coverBoxPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size = QSize() );
-	QPixmap coverDiscPixmap( const QString& id, pNetworkAccessManager* cache, const QSize& size = QSize() );
-	WiiTDB::Scan urlCover( const QUrl& url );
-}; // WiiTDB
-}; // QWBDFS
+	void initialize( AbstractFileSystem* model, pNetworkAccessManager* manager );
+	void setViewMode( QListView::ViewMode mode );
+	void setViewIconType( QWBFS::WiiTDB::Scan scan );
+	
+	QWBFS::WiiTDB::Scan viewIconType() const;
+	AbstractFileSystem* model() const;
+	pNetworkAccessManager* cacheManager() const;
 
-#endif // COVERS_H
+protected slots:
+	void header_sortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
+
+protected:
+	QWBFS::WiiTDB::Scan mIconType;
+	AbstractFileSystem* mModel;
+	ListViewDelegate* mDelegate;
+	pNetworkAccessManager* mCacheManager;
+	QHeaderView* mHeader;
+	
+	virtual void resizeEvent( QResizeEvent* event );
+	virtual void mousePressEvent( QMouseEvent* event );
+	virtual void startDrag( Qt::DropActions supportedActions );
+	
+	// dirty code get from QAbstractItemView for avoid drag & drop bug (no preview when dragging)
+	
+	QItemViewPaintPairs draggablePaintPairs( const QModelIndexList& indexes, QRect* r ) const;
+	QPixmap renderToPixmap( const QModelIndexList& indexes, QRect* r ) const;
+	QStyleOptionViewItemV4 viewOptionsV4() const;
+	void clearOrRemove();
+};
+
+#endif // LISTVIEW_H

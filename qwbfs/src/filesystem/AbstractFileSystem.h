@@ -33,13 +33,11 @@ public:
     virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
     
-    
-    
-    QString filePath() const;
-    
-    virtual bool mount( const QString& filePath ) = 0;
-    virtual bool umount() = 0;
-	virtual bool isMounted() const = 0;
+	QString mountPoint() const;
+	bool isMounted() const;
+	
+    virtual bool open( const QString& mountPoint ) = 0;
+    virtual bool close() = 0;
     virtual bool format() = 0;
     
     virtual QWBFS::FileSystemType type() const = 0;
@@ -51,7 +49,7 @@ public:
     virtual FileSystemEntry entry( const QString& id ) const = 0;
     virtual bool hasEntry( const QString& id ) const = 0;
     
-    virtual bool addEntry( const FileSystemEntry& entry, QWBFS::EntryType format = QWBFS::EntryTypeNone ) = 0;
+    virtual bool addEntry( const FileSystemEntry& entry, QWBFS::EntryType format = QWBFS::EntryTypeUnknown ) = 0;
     virtual bool removeEntry( const FileSystemEntry& entry ) = 0;
 
 protected:
@@ -67,7 +65,7 @@ protected slots:
 
 protected:
     int mRefCount;
-    QString mFilePath;
+    QString mMountPoint;
     QTimer* mChangeTimeOut;
 
 signals:

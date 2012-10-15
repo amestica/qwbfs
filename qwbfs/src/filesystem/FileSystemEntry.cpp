@@ -4,15 +4,21 @@ FileSystemEntry::FileSystemEntry()
     : mFilePath( QString::null ),
         mId( QString::null ),
         mSize( -1 ),
-        mType( QWBFS::EntryTypeNone )
+        mType( QWBFS::EntryTypeUnknown ),
+        mState( QWBFS::EntryStateNone ),
+        mTitle( QString::null ),
+        mRegion( 0 )
 {
 }
 
-FileSystemEntry::FileSystemEntry( const QString& filePath, const QString& id, qint64 size, QWBFS::EntryType type )
+FileSystemEntry::FileSystemEntry( const QString& filePath, const QString& id, qint64 size, const QString& title, char region, QWBFS::EntryType type )
     : mFilePath( filePath ),
         mId( id ),
         mSize( size ),
-        mType( type )
+        mType( type ),
+        mState( QWBFS::EntryStateNone ),
+        mTitle( title ),
+        mRegion( region )
 {
 }
 
@@ -22,7 +28,10 @@ bool FileSystemEntry::operator==( const FileSystemEntry& other ) const
         mFilePath == other.mFilePath &&
         mId == other.mId &&
         mSize == other.mSize &&
-        mType == other.mType
+        mType == other.mType &&
+        mTitle == other.mTitle &&
+        mRegion == other.mRegion &&
+        mState == other.mState
     ;
 }
 
@@ -53,4 +62,19 @@ qint64 FileSystemEntry::size() const
 QWBFS::EntryType FileSystemEntry::type() const
 {
     return mType;
+}
+
+QWBFS::EntryState FileSystemEntry::state() const
+{
+    return mState;
+}
+
+QString FileSystemEntry::title() const
+{
+    return mTitle.isEmpty() ? "#NaN" : mTitle;
+}
+
+char FileSystemEntry::region() const
+{
+    return mRegion;
 }

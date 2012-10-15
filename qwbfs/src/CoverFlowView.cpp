@@ -34,7 +34,6 @@
 **
 ****************************************************************************/
 #include "CoverFlowView.h"
-#include "models/DiscModel.h"
 
 #include <QScrollBar>
 #include <QTimer>

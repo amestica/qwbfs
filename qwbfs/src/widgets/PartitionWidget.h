@@ -3,7 +3,7 @@
 ** 		Created using Monkey Studio IDE v1.8.4.0 (1.8.4.0)
 ** Authors   : Filipe Azevedo aka Nox P@sNox <pasnox@gmail.com>
 ** Project   : QWBFS Manager
-** FileName  : UIMain.h
+** FileName  : PartitionWidget.h
 ** Date      : 2010-06-16T14:19:29
 ** License   : GPL2
 ** Home Page : http://code.google.com/p/qwbfs
@@ -33,76 +33,67 @@
 ** wish to do so, delete this exception statement from your version.
 **
 ****************************************************************************/
-#ifndef UIMAIN_H
-#define UIMAIN_H
+#ifndef PARTITIONWIDGET_H
+#define PARTITIONWIDGET_H
 
-#include "ui_UIMain.h"
+#include "ui_PartitionWidget.h"
 
-class QMenuBar;
-class QFileSystemModel;
-class QNetworkReply;
-class pNetworkAccessManager;
-class pPaypalButton;
-class pUpdateChecker;
+class UIMain;
+class AbstractFileSystem;
 
-class UIMain : public QMainWindow, public Ui::UIMain
+class PartitionWidget : public QWidget, public Ui::PartitionWidget
 {
 	Q_OBJECT
 
 public:
-	UIMain( QWidget* parent = 0 );
-	virtual ~UIMain();
+	PartitionWidget( QWidget* parent = 0 );
+	virtual ~PartitionWidget();
 	
 	virtual bool event( QEvent* event );
 	
-	pNetworkAccessManager* cache() const;
-	pQueuedMessageToolBar* messageToolBar() const;
+	AbstractFileSystem* entriesModel() const;
+	AbstractFileSystem* importModel() const;
+	QString currentPartition() const;
+	
+	void setMainView( bool main );
+
+public slots:
+	void setCurrentPartition( const QString& partition );
+	void showError( const QString& error );
+	void showError( int error );
 
 protected:
-#if defined( Q_OS_MAC )
-	QMenuBar* mMenuBar;
-#endif
-	QMenu* mActions;
-	pPaypalButton* mDonationWidget;
-	QFileSystemModel* mFoldersModel;
-	QFileSystemModel* mFilesModel;
-	pNetworkAccessManager* mCache;
-	QString mLastDiscId;
-	pUpdateChecker* mUpdateChecker;
+	virtual void dragEnterEvent( QDragEnterEvent* event );
+	virtual void dropEvent( QDropEvent* event );
 	
-	virtual void showEvent( QShowEvent* event );
-	virtual void closeEvent( QCloseEvent* event );
-	virtual bool eventFilter( QObject* object, QEvent* event );
-	
-	void connectView( PartitionWidget* widget );
+	UIMain* mainWindow() const;
+	void localeChanged();
 
 protected slots:
-	void localeChanged();
-	void loadProperties( bool firstInit = true );
-	void saveProperties();
-	void changeLocaleRequested();
-	void propertiesChanged();
+	void models_countChanged();
+	void views_selectionChanged();
+	void coverFlow_centerIndexChanged( const QModelIndex& index );
+	//void progress_jobFinished( const QWBFS::Model::Disc& disc );
+	void progress_finished();
+	
+	void on_cbPartitions_currentIndexChanged( int index );
+	
+	void on_tbLoad_clicked();
+	void on_tbFormat_clicked();
+	void on_tbOpen_clicked();
+	void on_tbClose_clicked();
+	
+	void on_tbRemoveDiscs_clicked();
+	void on_tbRenameDisc_clicked();
+	
+	void on_tbClearImport_clicked();
+	void on_tbRemoveImport_clicked();
+	void on_tbImport_clicked();
+
+signals:
 	void openViewRequested();
 	void closeViewRequested();
 	void coverRequested( const QString& id );
-	//void progress_jobFinished( const QWBFS::Model::Disc& disc );
-	void networkAccessManager_finished( QNetworkReply* reply );
-	void networkAccessManager_cached( const QUrl& url );
-	void networkAccessManager_error( const QUrl& url, const QString& message );
-	void networkAccessManager_cacheCleared();
-	void on_aReloadPartitions_triggered();
-	void on_aQuit_triggered();
-	void on_aAbout_triggered();
-	void on_aProperties_triggered();
-	void on_aConvertToWBFSFiles_triggered();
-	void on_aConvertToISOFiles_triggered();
-	void on_aRenameDiscsInFolder_triggered();
-	void on_tvFolders_activated( const QModelIndex& index );
-	void on_tbReloadDrives_clicked();
-	void on_cbDrives_currentIndexChanged( const QString& text );
-	void on_tbClearExport_clicked();
-	void on_tbRemoveExport_clicked();
-	void on_tbExport_clicked();
 };
 
-#endif // UIMAIN_H
+#endif // PARTITIONWIDGET_H
