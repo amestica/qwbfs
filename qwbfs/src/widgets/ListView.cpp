@@ -43,14 +43,12 @@
 #include <QDebug>
 
 ListView::ListView( QWidget* parent )
-	: QListView( parent )
+	: QListView( parent ),
+		mIconType( QWBFS::WiiTDB::Cover ),
+		mModel( 0 ),
+		mDelegate( 0 ),
+		mHeader( new QHeaderView( Qt::Horizontal, this ) )
 {
-	mIconType = QWBFS::WiiTDB::Cover;
-	mModel = 0;
-	mDelegate = 0;
-	mHeader = new QHeaderView( Qt::Horizontal, this );
-	mCacheManager = 0;
-	
 	QPalette pal = viewport()->palette();
 	pal.setColor( viewport()->backgroundRole(), pal.color( viewport()->backgroundRole() ).darker() );
 	
@@ -67,15 +65,14 @@ ListView::~ListView()
 {
 }
 
-void ListView::initialize( AbstractFileSystem* model, pNetworkAccessManager* manager )
+void ListView::setModel( AbstractFileSystem* model )
 {
 	delete mModel;
 	delete mDelegate;
 	mModel = model;
-	mDelegate = new ListViewDelegate( this, mModel, manager );
-	mCacheManager = manager;
+	mDelegate = new ListViewDelegate( this );
 	
-	setModel( mModel );
+	QListView::setModel( mModel );
 	setItemDelegate( mDelegate );
 	mHeader->setModel( mModel );
 	
@@ -91,6 +88,22 @@ void ListView::initialize( AbstractFileSystem* model, pNetworkAccessManager* man
 	mHeader->setResizeMode( 2, QHeaderView::Stretch );
 	mHeader->setClickable( true );
 	mHeader->setSortIndicatorShown( true );
+}
+
+AbstractFileSystem* ListView::model() const
+{
+	return mModel;
+}
+
+void ListView::setViewIconType( QWBFS::WiiTDB::Scan scan )
+{
+	mIconType = scan;
+	updateGeometries();
+}
+
+QWBFS::WiiTDB::Scan ListView::viewIconType() const
+{
+	return mIconType;
 }
 
 void ListView::setViewMode( QListView::ViewMode mode )
@@ -120,30 +133,11 @@ void ListView::setViewMode( QListView::ViewMode mode )
 	viewport()->setAcceptDrops( wasViewportAcceptDrops );
 }
 
-void ListView::setViewIconType( QWBFS::WiiTDB::Scan scan )
-{
-	mIconType = scan;
-	updateGeometries();
-}
-
-QWBFS::WiiTDB::Scan ListView::viewIconType() const
-{
-	return mIconType;
-}
-
-AbstractFileSystem* ListView::model() const
-{
-	return mModel;
-}
-
-pNetworkAccessManager* ListView::cacheManager() const
-{
-	return mCacheManager;
-}
-
 void ListView::header_sortIndicatorChanged( int logicalIndex, Qt::SortOrder order )
 {
-	mModel->sort( logicalIndex, order );
+	if ( mModel ) {
+		mModel->sort( logicalIndex, order );
+	}
 	
 	if ( selectionModel()->hasSelection() ) {
 		scrollTo( selectionModel()->selectedIndexes().last() );
@@ -176,17 +170,17 @@ void ListView::mousePressEvent( QMouseEvent* event )
 
 void ListView::startDrag( Qt::DropActions supportedActions )
 {
-	QModelIndexList indexes = selectionModel()->selectedIndexes();
+	const QModelIndexList indexes = selectionModel()->selectedIndexes();
 	
 	if ( indexes.count() > 0 ) {
-		QMimeData *data = model()->mimeData( indexes );
+		QMimeData* data = model()->mimeData( indexes );
 		
 		if ( !data ) {
 			return;
 		}
 		
 		QRect rect;
-		QPixmap pixmap = renderToPixmap( indexes, &rect );
+		const QPixmap pixmap = renderToPixmap( indexes, &rect );
 		//rect.adjust( horizontalOffset(), verticalOffset(), 0, 0 ); // P@sNox: This cause a decal in the preview that cause the QDrag pixmap to not be visible.
 		
 		QDrag* drag = new QDrag( this );
@@ -196,14 +190,14 @@ void ListView::startDrag( Qt::DropActions supportedActions )
 		
 		Qt::DropAction defaultDropAction = Qt::IgnoreAction;
 		
-		if ( this->defaultDropAction() != Qt::IgnoreAction && (supportedActions & this->defaultDropAction() ) ) {
+		if ( this->defaultDropAction() != Qt::IgnoreAction && ( supportedActions & this->defaultDropAction() ) ) {
 			defaultDropAction = this->defaultDropAction();
 		}
 		else if ( supportedActions & Qt::CopyAction && dragDropMode() != QAbstractItemView::InternalMove ) {
 			defaultDropAction = Qt::CopyAction;
 		}
 		
-		if ( drag->exec(supportedActions, defaultDropAction ) == Qt::MoveAction ) {
+		if ( drag->exec( supportedActions, defaultDropAction ) == Qt::MoveAction ) {
 			clearOrRemove();
 		}
 	}

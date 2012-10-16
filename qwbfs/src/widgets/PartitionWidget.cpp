@@ -60,13 +60,13 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	NativeFileSystem* fs = new NativeFileSystem( 0 );
 	qWarning() << fs->open( QString::fromUtf8( "/home/pasnox/Téléchargements/wii/uncompress" ) );
 	
-	lvDiscs->initialize( fs, window->cache() );
+	lvDiscs->setModel( fs );
 	lvDiscs->setViewMode( properties.viewMode() );
 	lvDiscs->setViewIconType( properties.viewIconType() );
 	/*cfvDiscs->setModel( lvDiscs->model() );*/
 	/*cfvDiscs->setColumn( 0 );
 	cfvDiscs->setDisplayTextColumn( 2 );*/
-	lvImport->initialize( 0, window->cache() );
+	lvImport->setModel( 0 );
 	lvImport->setViewMode( properties.viewMode() );
 	lvImport->setViewIconType( properties.viewIconType() );
 	
