@@ -102,7 +102,7 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QWidget" name="cfvDiscs" native="true"/>
+                 <widget class="CoverFlowView" name="cfvDiscs" native="true"/>
                 </item>
                </layout>
               </widget>
@@ -360,6 +360,12 @@
    <class>Gauge</class>
    <extends>QWidget</extends>
    <header>Gauge.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CoverFlowView</class>
+   <extends>QWidget</extends>
+   <header>widgets/CoverFlowView.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
