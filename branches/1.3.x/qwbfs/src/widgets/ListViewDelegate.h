@@ -38,17 +38,14 @@
 
 #include <QStyledItemDelegate>
 
-class pNetworkAccessManager;
-
 class ListView;
-class AbstractFileSystem;
 
 class ListViewDelegate : public QStyledItemDelegate
 {
 	Q_OBJECT
 	
 public:
-	ListViewDelegate( ListView* view, AbstractFileSystem* model, pNetworkAccessManager* cache );
+	ListViewDelegate( ListView* view );
 	virtual ~ListViewDelegate();
 	
 	virtual void paint( QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index ) const;
@@ -56,8 +53,6 @@ public:
 
 protected:
 	ListView* mView;
-	AbstractFileSystem* mModel;
-	pNetworkAccessManager* mCache;
 	
 	void paintFrame( QPainter* painter, const QStyleOptionViewItemV4& option, bool pair = true ) const;
 	void paintList( QPainter* painter, const QStyleOptionViewItemV4& option, const QModelIndex& index ) const;

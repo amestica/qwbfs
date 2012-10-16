@@ -127,7 +127,7 @@ UIMain::UIMain( QWidget* parent )
 	
 	lvFiles->setModel( mFilesModel );
 	
-	lvExport->initialize( 0, mCache );
+	lvExport->setModel( 0 );
 	
 	mLastDiscId = -1;
 	

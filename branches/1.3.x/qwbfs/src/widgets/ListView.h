@@ -41,7 +41,7 @@
 #include "wiitdb/Covers.h"
 
 class QHeaderView;
-class pNetworkAccessManager;
+
 class AbstractFileSystem;
 class ListViewDelegate;
 
@@ -58,13 +58,12 @@ public:
 	ListView( QWidget* parent = 0 );
 	virtual ~ListView();
 	
-	void initialize( AbstractFileSystem* model, pNetworkAccessManager* manager );
-	void setViewMode( QListView::ViewMode mode );
+	void setModel( AbstractFileSystem* model );
 	void setViewIconType( QWBFS::WiiTDB::Scan scan );
+	void setViewMode( QListView::ViewMode mode );
 	
-	QWBFS::WiiTDB::Scan viewIconType() const;
 	AbstractFileSystem* model() const;
-	pNetworkAccessManager* cacheManager() const;
+	QWBFS::WiiTDB::Scan viewIconType() const;
 
 protected slots:
 	void header_sortIndicatorChanged( int logicalIndex, Qt::SortOrder order );
@@ -73,7 +72,6 @@ protected:
 	QWBFS::WiiTDB::Scan mIconType;
 	AbstractFileSystem* mModel;
 	ListViewDelegate* mDelegate;
-	pNetworkAccessManager* mCacheManager;
 	QHeaderView* mHeader;
 	
 	virtual void resizeEvent( QResizeEvent* event );

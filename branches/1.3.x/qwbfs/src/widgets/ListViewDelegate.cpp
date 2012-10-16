@@ -34,27 +34,21 @@
 **
 ****************************************************************************/
 #include "ListViewDelegate.h"
-#include "filesystem/AbstractFileSystem.h"
-#include "Gauge.h"
-#include "wiitdb/Covers.h"
 #include "ListView.h"
+#include "filesystem/AbstractFileSystem.h"
+#include "wiitdb/Covers.h"
+#include "Gauge.h"
 
-#include <FreshCore/pNetworkAccessManager>
-#include <FreshGui/pIconManager>
 #include <FreshCore/pCoreUtils>
 
 #include <QPainter>
 #include <QDebug>
 
-ListViewDelegate::ListViewDelegate( ListView* view, AbstractFileSystem* model, pNetworkAccessManager* cache )
+ListViewDelegate::ListViewDelegate( ListView* view )
 	: QStyledItemDelegate( view ),
-		mView( view ),
-		mModel( model ),
-		mCache( cache )
+		mView( view )
 {
 	Q_ASSERT( view );
-	Q_ASSERT( model );
-	Q_ASSERT( cache );
 }
 
 ListViewDelegate::~ListViewDelegate()
@@ -67,7 +61,7 @@ void ListViewDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _op
 	QStyleOptionViewItem option = _option;
 	option.state &= ~QStyle::State_HasFocus;
 	
-	if ( mModel ) {
+	if ( mView ) {
 		switch ( mView->viewMode() ) {
 			case QListView::ListMode: {
 				paintList( painter, option, index );
@@ -83,13 +77,13 @@ void ListViewDelegate::paint( QPainter* painter, const QStyleOptionViewItem& _op
 
 QSize ListViewDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
 {
-	if ( mModel ) {
+	if ( mView ) {
 		switch ( mView->viewMode() ) {
 			case QListView::ListMode: {
-				return mModel->data( index, AbstractFileSystem::ListModeSizeHintRole ).toSize();
+				return mView->model()->data( index, AbstractFileSystem::ListModeSizeHintRole ).toSize();
 			}
 			case QListView::IconMode: {
-				return mModel->data( index, AbstractFileSystem::IconModeSizeHintRole ).toSize();
+				return mView->model()->data( index, AbstractFileSystem::IconModeSizeHintRole ).toSize();
 			}
 		}
 	}
@@ -127,7 +121,7 @@ void ListViewDelegate::paintList( QPainter* painter, const QStyleOptionViewItemV
 	painter->setRenderHint( QPainter::Antialiasing );
 	
 	const bool selected = option.state & QStyle::State_Selected;
-	const FileSystemEntry entry = mModel->entry( index.row() );
+	const FileSystemEntry entry = mView->model()->entry( index.row() );
 	QRect rect;
 	
 	// background / selection
@@ -198,7 +192,7 @@ void ListViewDelegate::paintIcon( QPainter* painter, const QStyleOptionViewItemV
 	painter->setRenderHint( QPainter::Antialiasing );
 	
 	const bool selected = option.state & QStyle::State_Selected;
-	const FileSystemEntry entry= mModel->entry( index.row() );
+	const FileSystemEntry entry= mView->model()->entry( index.row() );
 	const int margin = 9;
 	const int spacing = 5;
 	const QString text = entry.title();
