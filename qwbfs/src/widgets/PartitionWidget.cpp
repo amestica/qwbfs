@@ -63,9 +63,9 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	lvDiscs->setModel( fs );
 	lvDiscs->setViewMode( properties.viewMode() );
 	lvDiscs->setViewIconType( properties.viewIconType() );
-	/*cfvDiscs->setModel( lvDiscs->model() );*/
-	/*cfvDiscs->setColumn( 0 );
-	cfvDiscs->setDisplayTextColumn( 2 );*/
+	cfvDiscs->setModel( lvDiscs->model() );
+	cfvDiscs->setColumn( 0 );
+	cfvDiscs->setDisplayTextColumn( 2 );
 	lvImport->setModel( 0 );
 	lvImport->setViewMode( properties.viewMode() );
 	lvImport->setViewIconType( properties.viewIconType() );

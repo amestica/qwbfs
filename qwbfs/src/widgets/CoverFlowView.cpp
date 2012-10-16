@@ -34,6 +34,7 @@
 **
 ****************************************************************************/
 #include "CoverFlowView.h"
+#include "filesystem/AbstractFileSystem.h"
 
 #include <QScrollBar>
 #include <QTimer>
@@ -46,13 +47,13 @@
 #define COVERFLOWVIEW_ITEM_SIZE QSize( 180, 240 )
 
 CoverFlowView::CoverFlowView( QWidget* parent )
-	: PictureFlow( parent )
+	: PictureFlow( parent ),
+		mScrollBar( new QScrollBar( Qt::Horizontal, this ) ),
+		mModel( 0 ),
+		mColumn( -1 ),
+		mDisplayTextColumn( -1 ),
+		mTimer( new QTimer( this ) )
 {
-	mScrollBar = new QScrollBar( Qt::Horizontal, this );
-	mModel = 0;
-	mColumn = -1;
-	mDisplayTextColumn = -1;
-	mTimer = new QTimer( this );
 	mTimer->setSingleShot( true );
 	
 	mScrollBar->setSingleStep( 1 );
@@ -81,7 +82,7 @@ bool CoverFlowView::event( QEvent* event )
 				if ( event->type() == QEvent::ToolTip ) {
 					QToolTip::showText( he->globalPos(), text, this );
 				}
-				else if ( event->type() == QEvent::ToolTip ) {
+				else if ( event->type() == QEvent::WhatsThis ) {
 					QWhatsThis::showText( he->globalPos(), text, this );
 				}
 			}
@@ -247,7 +248,7 @@ void CoverFlowView::preload()
 	}
 }
 
-void CoverFlowView::setModel( QAbstractItemModel* model )
+void CoverFlowView::setModel( AbstractFileSystem* model )
 {
 	if ( mModel == model ) {
 		return;
@@ -262,8 +263,6 @@ void CoverFlowView::setModel( QAbstractItemModel* model )
 		disconnect( mModel, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ), this, SLOT( _q_rowsInserted( const QModelIndex&, int, int ) ) );
 		disconnect( mModel, SIGNAL( rowsMoved( const QModelIndex&, int, int, const QModelIndex&, int ) ), this, SLOT( _q_rowsMoved( const QModelIndex&, int, int, const QModelIndex&, int ) ) );
 		disconnect( mModel, SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ), this, SLOT( _q_rowsRemoved( const QModelIndex&, int, int ) ) );
-		
-		mModel = 0;
 	}
 	
 	mModel = model;
@@ -282,7 +281,7 @@ void CoverFlowView::setModel( QAbstractItemModel* model )
 	}
 }
 
-QAbstractItemModel* CoverFlowView::model() const
+AbstractFileSystem* CoverFlowView::model() const
 {
 	return mModel;
 }
@@ -331,7 +330,6 @@ QModelIndex CoverFlowView::modelIndex( int index, int column ) const
 QPixmap CoverFlowView::pixmap( int _index ) const
 {
 	const QModelIndex index = modelIndex( _index );
-	const QWBFS::Model::DiscModel* model = qobject_cast<QWBFS::Model::DiscModel*>( mModel );
-	const QWBFS::Model::Disc disc = model ? model->disc( index ) : QWBFS::Model::Disc();
-	return model ? model->coverPixmap( disc.id, slideSize(), true ) : QPixmap();
+	const FileSystemEntry entry = mModel ? mModel->entry( index.row() ) : FileSystemEntry();
+	return mModel ? QWBFS::coverPixmap( QWBFS::WiiTDB::Cover, entry.id(), slideSize() ) : QPixmap();
 }

@@ -40,8 +40,9 @@
 
 #include <QPersistentModelIndex>
 
+class AbstractFileSystem;
+
 class QScrollBar;
-class QAbstractItemModel;
 class QModelIndex;
 class QTimer;
 
@@ -53,8 +54,8 @@ public:
 	CoverFlowView( QWidget* parent = 0 );
 	virtual ~CoverFlowView();
 	
-	void setModel( QAbstractItemModel* model );
-	QAbstractItemModel* model() const;
+	void setModel( AbstractFileSystem* model );
+	AbstractFileSystem* model() const;
 	
 	void setColumn( int column );
 	int column() const;
@@ -64,7 +65,7 @@ public:
 
 protected:
 	QScrollBar* mScrollBar;
-	QAbstractItemModel* mModel;
+	AbstractFileSystem* mModel;
 	QPersistentModelIndex mRootIndex;
 	int mColumn;
 	int mDisplayTextColumn;

@@ -166,7 +166,6 @@ HEADERS *= src/main.h \
     src/PropertiesDialog.h \
     src/Properties.h \
     src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.h \
-#    src/CoverFlowView.h \
     src/models/pPartitionModel.h \
     src/models/PartitionDelegate.h \
     src/PartitionComboBox.h \
@@ -178,6 +177,7 @@ HEADERS *= src/main.h \
     src/filesystem/FileSystemEntry.h \
     src/widgets/ListView.h \
     src/widgets/ListViewDelegate.h \
+    src/widgets/CoverFlowView.h \
     src/QWBFS.h
 
 SOURCES *= src/main.cpp \
@@ -190,7 +190,6 @@ SOURCES *= src/main.cpp \
     src/PropertiesDialog.cpp \
     src/Properties.cpp \
     src/ofi-labs-pictureflow/pictureflow-qt/pictureflow.cpp \
-#    src/CoverFlowView.cpp \
     src/models/pPartitionModel.cpp \
     src/models/PartitionDelegate.cpp \
     src/PartitionComboBox.cpp \
@@ -202,6 +201,7 @@ SOURCES *= src/main.cpp \
     src/filesystem/FileSystemEntry.cpp \
     src/widgets/ListView.cpp \
     src/widgets/ListViewDelegate.cpp \
+    src/widgets/CoverFlowView.cpp \
     src/QWBFS.cpp
 
 linux* {
