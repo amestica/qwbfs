@@ -151,7 +151,7 @@ TRANSLATIONS *= ../translations/qwbfsmanager-ru_RU.ts \
     ../translations/qwbfsmanager-it_IT.ts
 
 FORMS *= src/UIMain.ui \
-#    src/ProgressDialog.ui \
+#   src/ProgressDialog.ui \
     src/UIAbout.ui \
     src/PropertiesDialog.ui \
     src/widgets/PartitionWidget.ui
@@ -159,8 +159,8 @@ FORMS *= src/UIMain.ui \
 HEADERS *= src/main.h \
     src/UIMain.h \
     src/Gauge.h \
-#    src/ProgressDialog.h \
-#    src/WorkerThread.h \
+#   src/ProgressDialog.h \
+#   src/WorkerThread.h \
     src/UIAbout.h \
     src/wiitdb/Covers.h \
     src/PropertiesDialog.h \
@@ -173,8 +173,9 @@ HEADERS *= src/main.h \
     src/filesystem/AbstractFileSystem.h \
     src/filesystem/NativeFileSystem.h \
     src/filesystem/FileSystemManager.h \
-    src/widgets/PartitionWidget.h \
     src/filesystem/FileSystemEntry.h \
+    src/filesystem/StockFileSystem.h \
+    src/widgets/PartitionWidget.h \
     src/widgets/ListView.h \
     src/widgets/ListViewDelegate.h \
     src/widgets/CoverFlowView.h \
@@ -183,8 +184,8 @@ HEADERS *= src/main.h \
 SOURCES *= src/main.cpp \
     src/UIMain.cpp \
     src/Gauge.cpp \
-#    src/ProgressDialog.cpp \
-#    src/WorkerThread.cpp \
+#   src/ProgressDialog.cpp \
+#   src/WorkerThread.cpp \
     src/UIAbout.cpp \
     src/wiitdb/Covers.cpp \
     src/PropertiesDialog.cpp \
@@ -197,8 +198,9 @@ SOURCES *= src/main.cpp \
     src/filesystem/AbstractFileSystem.cpp \
     src/filesystem/NativeFileSystem.cpp \
     src/filesystem/FileSystemManager.cpp \
-    src/widgets/PartitionWidget.cpp \
     src/filesystem/FileSystemEntry.cpp \
+    src/filesystem/StockFileSystem.cpp \
+    src/widgets/PartitionWidget.cpp \
     src/widgets/ListView.cpp \
     src/widgets/ListViewDelegate.cpp \
     src/widgets/CoverFlowView.cpp \

@@ -82,7 +82,8 @@ namespace QWBFS
     enum FileSystemType {
         FileSystemTypeNone = 0x0,
         FileSystemTypeWBFS = 0x1,
-        FileSystemTypeNative = 0x2
+        FileSystemTypeNative = 0x2,
+		FileSystemTypeStock = 0x3
     };
     
 	enum Error {

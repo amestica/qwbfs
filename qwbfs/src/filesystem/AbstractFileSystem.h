@@ -52,6 +52,7 @@ public:
     
     virtual bool addEntry( const FileSystemEntry& entry, QWBFS::EntryType format = QWBFS::EntryTypeUnknown ) = 0;
     virtual bool removeEntry( const FileSystemEntry& entry ) = 0;
+	virtual void clear() = 0;
 
 protected:
 	virtual void setEntriesInternal( const FileSystemEntry::List& entries ) = 0;
