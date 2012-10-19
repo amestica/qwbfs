@@ -149,6 +149,43 @@ QVariant AbstractFileSystem::headerData( int section, Qt::Orientation orientatio
 	return QAbstractTableModel::headerData( section, orientation, role );
 }
 
+void AbstractFileSystem::sort( int column, Qt::SortOrder order )
+{
+	emit layoutAboutToBeChanged();
+	
+	QModelIndexList oldIndexes = persistentIndexList();
+	const FileSystemEntry::List oldEntries = entries();
+	FileSystemEntry::List newEntries( oldEntries );
+	QModelIndexList newIndexes;
+	QHash<int, int> mapping; // old row, new row
+	
+	for ( int i = 0; i < newEntries.count(); i++ ) {
+		mapping[ i ] = i;
+	}
+	
+	if ( order == Qt::AscendingOrder ) {
+		AbstractFileSystem::HashLessThanSorter lesser( column );
+		qSort( newEntries.begin(), newEntries.end(), lesser );
+	}
+	else {
+		AbstractFileSystem::HashGreaterThanSorter greater( column );
+		qSort( newEntries.begin(), newEntries.end(), greater );
+	}
+	
+	for ( int i = 0; i < newEntries.count(); i++ ) {
+		mapping[ oldEntries.indexOf( newEntries[ i ] ) ] = i; // not the quickest but entries count should not be so high
+	}
+	
+	foreach ( const QModelIndex& index, oldIndexes ) {
+		newIndexes << QAbstractTableModel::index( mapping[ index.row() ], index.column() );
+	}
+	
+	setEntriesInternal( newEntries );
+	changePersistentIndexList( oldIndexes, newIndexes );
+	
+	emit layoutChanged();
+}
+
 int AbstractFileSystem::ref()
 {
     return ++mRefCount;
@@ -182,4 +219,70 @@ void AbstractFileSystem::dataChanged()
 void AbstractFileSystem::dataChangedTimeOut()
 {
     emit changed();
+}
+
+AbstractFileSystem::HashLessThanSorter::HashLessThanSorter( int column )
+{
+	c = column;
+}
+
+bool AbstractFileSystem::HashLessThanSorter::operator()( const FileSystemEntry& left, const FileSystemEntry& right ) const
+{
+	int compare = 0;
+	
+	switch ( c ) {
+		case 0:
+			compare = 0;
+			break;
+		case 1:
+			compare = QString::compare( left.id(), right.id(), Qt::CaseInsensitive );
+			break;
+		case 2:
+			compare = QString::compare( left.title(), right.title(), Qt::CaseInsensitive );
+			break;
+		case 3:
+			compare = left.size() == right.size() ? 0 : ( left.size() < right.size() ? -1 : 1 );
+			break;
+		case 4:
+			compare = QString::compare( QWBFS::entryRegionToString( left.region(), false ), QWBFS::entryRegionToString( right.region(), false ), Qt::CaseInsensitive );
+			break;
+		case 5:
+			compare = QString::compare( left.filePath(), right.filePath(), Qt::CaseInsensitive );
+			break;
+	}
+	
+	return compare == 0 ? false : compare < 0;
+}
+
+AbstractFileSystem::HashGreaterThanSorter::HashGreaterThanSorter( int column )
+{
+	c = column;
+}
+
+bool AbstractFileSystem::HashGreaterThanSorter::operator()( const FileSystemEntry& left, const FileSystemEntry& right ) const
+{
+	int compare = 0;
+	
+	switch ( c ) {
+		case 0:
+			compare = 0;
+			break;
+		case 1:
+			compare = QString::compare( left.id(), right.id(), Qt::CaseInsensitive );
+			break;
+		case 2:
+			compare = QString::compare( left.title(), right.title(), Qt::CaseInsensitive );
+			break;
+		case 3:
+			compare = left.size() == right.size() ? 0 : ( left.size() < right.size() ? -1 : 1 );
+			break;
+		case 4:
+			compare = QString::compare( QWBFS::entryRegionToString( left.region(), false ), QWBFS::entryRegionToString( right.region(), false ), Qt::CaseInsensitive );
+			break;
+		case 5:
+			compare = QString::compare( left.filePath(), right.filePath(), Qt::CaseInsensitive );
+			break;
+	}
+	
+	return compare == 0 ? false : compare > 0;
 }

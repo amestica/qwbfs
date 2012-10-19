@@ -31,8 +31,7 @@ public:
     virtual void clear();
 
 protected:
-    virtual FileSystemEntry createEntry( const QString& filePath ) const;
-    
+    virtual void setEntriesInternal( const FileSystemEntry::List& entries );
     void buildCache();
 
 protected:
