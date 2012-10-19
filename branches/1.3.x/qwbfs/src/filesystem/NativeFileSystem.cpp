@@ -40,7 +40,7 @@ bool NativeFileSystem::open( const QString& mountPoint )
     }
     
     mMountPoint = mountPoint;
-    buildCache();
+    loadEntries();
     return true;
 }
 
@@ -87,7 +87,8 @@ FileSystemEntry NativeFileSystem::entry( int row ) const
 
 FileSystemEntry NativeFileSystem::entry( const QString& id ) const
 {
-    return *mCache.value( id.toUpper() );
+    FileSystemEntry* entry = mCache.value( id.toUpper(), 0 );
+    return entry ? *entry : FileSystemEntry();
 }
 
 bool NativeFileSystem::hasEntry( const QString& id ) const
@@ -124,9 +125,10 @@ void NativeFileSystem::clear()
 void NativeFileSystem::setEntriesInternal( const FileSystemEntry::List& entries )
 {
     mEntries = entries;
+    buildCache();
 }
 
-void NativeFileSystem::buildCache()
+void NativeFileSystem::loadEntries()
 {
     QDir dir( mountPoint() );
     const QStringList filters = QStringList()
@@ -143,9 +145,22 @@ void NativeFileSystem::buildCache()
     }
     
     beginInsertRows( QModelIndex(), 0, filePaths.count() -1 );
+    
     for ( int i = 0; i < filePaths.count(); i++ ) {
         mEntries << QWBFS::createEntry( filePaths[ i ] );
-        mCache[ mEntries.last().id() ] = &mEntries.last();
     }
+    
+    buildCache();
+    
     endInsertRows();
+}
+
+void NativeFileSystem::buildCache()
+{
+    mCache.clear();
+    
+    for ( int i = 0; i < mEntries.count(); i++ ) {
+        FileSystemEntry& entry = mEntries[ i ];
+        mCache.insertMulti( entry.id().toUpper(), &entry );
+    }
 }

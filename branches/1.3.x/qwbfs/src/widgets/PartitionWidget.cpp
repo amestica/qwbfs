@@ -38,6 +38,7 @@
 #include "UIMain.h"
 #include "filesystem/AbstractFileSystem.h"
 #include "filesystem/NativeFileSystem.h"
+#include "filesystem/StockFileSystem.h"
 
 #include <FreshCore/pNetworkAccessManager>
 #include "models/pPartitionModel.h"
@@ -66,7 +67,7 @@ PartitionWidget::PartitionWidget( QWidget* parent )
 	cfvDiscs->setModel( lvDiscs->model() );
 	cfvDiscs->setColumn( 0 );
 	cfvDiscs->setDisplayTextColumn( 2 );
-	lvImport->setModel( 0 );
+	lvImport->setModel( new StockFileSystem( 0, QString::number( quintptr( this ) ) ) );
 	lvImport->setViewMode( properties.viewMode() );
 	lvImport->setViewIconType( properties.viewIconType() );
 	

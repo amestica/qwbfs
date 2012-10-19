@@ -1,17 +1,17 @@
-#ifndef NATIVEFILESYSTEM_H
-#define NATIVEFILESYSTEM_H
+#ifndef STOCKFILESYSTEM_H
+#define STOCKFILESYSTEM_H
 
 #include "AbstractFileSystem.h"
 
 #include <QHash>
 
-class NativeFileSystem : public AbstractFileSystem
+class StockFileSystem : public AbstractFileSystem
 {
     Q_OBJECT
     
 public:
-    NativeFileSystem( FileSystemManager* manager );
-    virtual ~NativeFileSystem();
+    StockFileSystem( FileSystemManager* manager, const QString& name = QString::null );
+    virtual ~StockFileSystem();
     
     virtual bool open( const QString& mountPoint );
     virtual bool close();
@@ -32,12 +32,10 @@ public:
 
 protected:
     virtual void setEntriesInternal( const FileSystemEntry::List& entries );
-    void loadEntries();
-    void buildCache();
 
 protected:
     FileSystemEntry::List mEntries;
     QHash<QString, FileSystemEntry*> mCache;
 };
 
-#endif // NATIVEFILESYSTEM_H
+#endif // STOCKFILESYSTEM_H
