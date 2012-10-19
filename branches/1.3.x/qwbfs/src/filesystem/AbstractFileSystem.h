@@ -32,6 +32,7 @@ public:
     virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
     virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+	virtual void sort( int column, Qt::SortOrder order = Qt::AscendingOrder );
     
 	QString mountPoint() const;
 	bool isMounted() const;
@@ -53,12 +54,11 @@ public:
     virtual bool removeEntry( const FileSystemEntry& entry ) = 0;
 
 protected:
+	virtual void setEntriesInternal( const FileSystemEntry::List& entries ) = 0;
     int ref();
     int unref();
     int refCount() const;
     void dataChanged();
-    
-    virtual FileSystemEntry createEntry( const QString& filePath ) const = 0;
 
 protected slots:
     void dataChangedTimeOut();
@@ -67,6 +67,22 @@ protected:
     int mRefCount;
     QString mMountPoint;
     QTimer* mChangeTimeOut;
+	
+	struct HashLessThanSorter {
+		HashLessThanSorter( int column );
+		
+		bool operator()( const FileSystemEntry& left, const FileSystemEntry& right ) const;
+
+		int c;
+	};
+
+	struct HashGreaterThanSorter {
+		HashGreaterThanSorter( int column );
+		
+		bool operator()( const FileSystemEntry& left, const FileSystemEntry& right ) const;
+
+		int c;
+	};
 
 signals:
     void changed();

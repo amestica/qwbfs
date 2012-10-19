@@ -121,9 +121,9 @@ void NativeFileSystem::clear()
     endRemoveRows();
 }
 
-FileSystemEntry NativeFileSystem::createEntry( const QString& filePath ) const
+void NativeFileSystem::setEntriesInternal( const FileSystemEntry::List& entries )
 {
-    return QWBFS::createEntry( filePath );
+    mEntries = entries;
 }
 
 void NativeFileSystem::buildCache()
@@ -144,7 +144,7 @@ void NativeFileSystem::buildCache()
     
     beginInsertRows( QModelIndex(), 0, filePaths.count() -1 );
     for ( int i = 0; i < filePaths.count(); i++ ) {
-        mEntries << createEntry( filePaths[ i ] );
+        mEntries << QWBFS::createEntry( filePaths[ i ] );
         mCache[ mEntries.last().id() ] = &mEntries.last();
     }
     endInsertRows();
