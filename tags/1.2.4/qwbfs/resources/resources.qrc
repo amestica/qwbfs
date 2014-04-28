@@ -1,0 +1,41 @@
+<RCC>
+  <qresource prefix="/files">
+    <file>../../GPL-2</file>
+  </qresource>
+  <qresource prefix="/wii">
+    <file alias="wiitdb.png">wiitdb.png</file>
+    <file alias="cover.png">wii-cover.png</file>
+    <file alias="disc.png">wii-disc.png</file>
+  </qresource>
+  <qresource prefix="/icons">
+    <file>128/iso-to-wbfs.png</file>
+    <file>128/wbfs-to-iso.png</file>
+    <file>donation.png</file>
+    <file>qwbfsmanager.png</file>
+    <file>splashscreen.png</file>
+    <file>256/tools.png</file>
+    <file>256/covers.png</file>
+    <file>256/read-partition.png</file>
+    <file>256/folder.png</file>
+    <file>256/about.png</file>
+    <file>256/add.png</file>
+    <file>256/clear.png</file>
+    <file>256/detailed.png</file>
+    <file>256/error.png</file>
+    <file>256/export.png</file>
+    <file>256/format.png</file>
+    <file>256/import.png</file>
+    <file>256/properties.png</file>
+    <file>256/quit.png</file>
+    <file>256/reload.png</file>
+    <file>256/remove.png</file>
+    <file>256/rename.png</file>
+    <file>256/success.png</file>
+    <file>256/tree.png</file>
+    <file>256/linux.png</file>
+    <file>256/mac.png</file>
+    <file>256/windows.png</file>
+    <file>256/wii.png</file>
+    <file>256/hdd.png</file>
+  </qresource>
+</RCC>
