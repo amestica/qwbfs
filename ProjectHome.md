@@ -1,0 +1,1 @@
+[The project has moved on GitHub](https://github.com/pasnox/qwbfsmanager)
